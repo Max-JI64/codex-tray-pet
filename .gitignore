@@ -1,0 +1,17 @@
+dist/
+build/
+*.exe
+*.zip
+*.bmp
+lite-status.json
+*-verification.*
+detection-live.json
+custom-animation*.bin
+pet-settings.txt
+quota-blocked.txt
+*-test/
+*.tmp
+.codex/
+auth.json
+AGENT_MEMORY.md
+__pycache__/

@@ -1,0 +1,6 @@
+LIBRARY kernel32.dll
+EXPORTS
+GetFileSizeEx
+Process32FirstW
+Process32NextW
+ProcessIdToSessionId
