@@ -72,7 +72,7 @@ static void webError(PetHttpClient *c,int code,const char *message){webReply(c,c
 static int jsonInt(const char *text,const char *name,int *out){const char *v=member(text,name),*end;char *parsed;long value;if(!v)return 0;value=strtol(v,&parsed,10);end=ws(parsed);if(parsed==v||(*end!=','&&*end!='}'))return 0;*out=(int)value;return value>=-2147483647&&value<=2147483647;}
 static int customFileMask(void){WCHAR path[1100];WIN32_FILE_ATTRIBUTE_DATA attr;int slot,mask=0;for(slot=-1;slot<=8;slot++){customPath(slot,path);if(GetFileAttributesExW(path,GetFileExInfoStandard,&attr)&&!(attr.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)&&attr.nFileSizeHigh==0&&attr.nFileSizeLow>=4112&&attr.nFileSizeLow<=32812)mask|=1<<(slot+1);}return mask;}
 static int customFileAvailable(void){return customFileMask()!=0;}
-static void webState(PetHttpClient *c){char json[512];int n=_snprintf(json,sizeof(json),"{\"badgeColor\":%d,\"animation\":%d,\"customIcon\":%d,\"customAvailable\":%s,\"customFrames\":%d,\"customPixelBytes\":%d,\"customSlots\":%d,\"customLoadedSlot\":%d,\"state\":%d,\"motion\":%d,\"finishedUnread\":%d,\"manual\":%d,\"manualMotion\":%d}",badgeStyle,animation,customEnabled,customFileAvailable()?"true":"false",customCount,customCount*4096,customFileMask(),customLoadedSlot,mood,motion,finishedUnread,manual,manualMotion);webReply(c,200,"application/json; charset=utf-8",json,n);}
+static void webState(PetHttpClient *c){char json[512];int n=_snprintf(json,sizeof(json),"{\"language\":%d,\"badgeColor\":%d,\"animation\":%d,\"customIcon\":%d,\"customAvailable\":%s,\"customFrames\":%d,\"customPixelBytes\":%d,\"customSlots\":%d,\"customLoadedSlot\":%d,\"state\":%d,\"motion\":%d,\"finishedUnread\":%d,\"manual\":%d,\"manualMotion\":%d}",uiLanguage,badgeStyle,animation,customEnabled,customFileAvailable()?"true":"false",customCount,customCount*4096,customFileMask(),customLoadedSlot,mood,motion,finishedUnread,manual,manualMotion);webReply(c,200,"application/json; charset=utf-8",json,n);}
 static void webRenderedPreview(PetHttpClient *c){
     BYTE bytes[12+8*4100]={0};DWORD pixels[1024],frames,duration;int i,j,shown=manual>=0?manual:mood,count=manualMotion==3?3:finishedUnread,custom=customEnabled&&customCount;
     int fallbackUrgent=motion==1&&customLoadedSlot!=7;frames=custom?(fallbackUrgent?4:customCount):motion==1||motion==2?4:2;if(!animation)frames=1;memcpy(bytes,"CPETAN1",8);memcpy(bytes+8,&frames,4);
@@ -91,6 +91,8 @@ static void webDispatch(PetHttpClient *c){
     sprintf(prefix,"/%s/",webToken);if(strncmp(path,prefix,strlen(prefix))||!validHttpOrigin(c->input,c->headerLength,post)){webError(c,403,"Settings access denied");return;}
     route=path+strlen(prefix);webTouched=GetTickCount();
     if(!post&&!route[0]){WCHAR file[1100];char *html;_snwprintf(file,1100,L"%ls\\settings.html",folder);html=textFile(file);if(!html){webError(c,500,"Settings page missing");return;}if(strlen(html)>65536){VirtualFree(html,0,MEM_RELEASE);webError(c,500,"Settings page too large");return;}webReply(c,200,"text/html; charset=utf-8",html,(int)strlen(html));VirtualFree(html,0,MEM_RELEASE);return;}
+    if(!post&&!strcmp(route,"localization.js")){WCHAR file[1100];char *js;_snwprintf(file,1100,L"%ls\\localization.js",folder);js=textFile(file);if(!js){webError(c,500,"Localization missing");return;}if(strlen(js)>262144){VirtualFree(js,0,MEM_RELEASE);webError(c,500,"Localization too large");return;}webReply(c,200,"text/javascript; charset=utf-8",js,(int)strlen(js));VirtualFree(js,0,MEM_RELEASE);return;}
+    if(post&&!strcmp(route,"api/language")){int language;if(!jsonInt(body,"language",&language)||!setUiLanguage(language)){webError(c,400,"Language could not be saved");return;}refresh(0);report();if(panel)InvalidateRect(panel,NULL,FALSE);webState(c);return;}
     if(!post&&!strcmp(route,"api/state")){webState(c);return;}
     if(!post&&!strcmp(route,"api/rendered")){webRenderedPreview(c);return;}
     if(!post&&!strncmp(route,"api/preview",11)){DWORD pixels[1024];BYTE rgba[4096];HICON icon;int custom=0,state=manual>=0?manual:mood,count=manualMotion==3?3:finishedUnread,i;
@@ -133,10 +135,10 @@ static int launchSettingsBrowser(const WCHAR *url){WCHAR chrome[1024],root[900],
     if(found){_snwprintf(parameters,400,L"--new-tab \"%ls\"",url);return (INT_PTR)ShellExecuteW(NULL,L"open",chrome,parameters,NULL,SW_SHOWNORMAL)>32;}return (INT_PTR)ShellExecuteW(NULL,L"open",url,NULL,NULL,SW_SHOWNORMAL)>32;
 }
 static void openBrowserSettings(int iconSection){WCHAR url[256],executable[1024],command[1500];STARTUPINFOW startup={0};PROCESS_INFORMATION child={0};
-    if(!browserSettingsStart()){MessageBoxW(panel?panel:window,L"브라우저 설정을 열지 못했습니다.",L"Codex 펫",MB_OK|MB_ICONERROR);return;}
+    if(!browserSettingsStart()){MessageBoxW(panel?panel:window,tr(TXT_browserFailed),tr(TXT_app),MB_OK|MB_ICONERROR);return;}
     webTouched=GetTickCount();_snwprintf(url,256,L"http://127.0.0.1:%d/%hs/%ls",webPort,webToken,iconSection?L"#icon":L"");
     GetModuleFileNameW(NULL,executable,1024);_snwprintf(command,1500,L"\"%ls\" --open-settings-url \"%ls\"",executable,url);startup.cb=sizeof(startup);startup.dwFlags=STARTF_USESHOWWINDOW;startup.wShowWindow=SW_HIDE;
     /* URI/Chrome activation DLLs belong to this short-lived helper. */
-    if(CreateProcessW(executable,command,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,folder,&startup,&child)){CloseHandle(child.hThread);CloseHandle(child.hProcess);}else MessageBoxW(panel?panel:window,L"브라우저를 실행하지 못했습니다.",L"Codex 펫",MB_OK|MB_ICONERROR);
+    if(CreateProcessW(executable,command,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,folder,&startup,&child)){CloseHandle(child.hThread);CloseHandle(child.hProcess);}else MessageBoxW(panel?panel:window,tr(TXT_launchBrowserFailed),tr(TXT_app),MB_OK|MB_ICONERROR);
     report();
 }

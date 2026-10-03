@@ -1,0 +1,1234 @@
+{
+  "대기중": [
+    "Idle",
+    "대기중",
+    "待機中",
+    "空闲",
+    "En espera"
+  ],
+  "작업중": [
+    "Working",
+    "작업중",
+    "作業中",
+    "工作中",
+    "Trabajando"
+  ],
+  "작업완료": [
+    "Completed",
+    "작업완료",
+    "完了",
+    "已完成",
+    "Completado"
+  ],
+  "질문있음": [
+    "Question",
+    "질문있음",
+    "質問あり",
+    "有问题",
+    "Pregunta"
+  ],
+  "오류": [
+    "Error",
+    "오류",
+    "エラー",
+    "错误",
+    "Error"
+  ],
+  "중지": [
+    "Stopped",
+    "중지",
+    "停止",
+    "已停止",
+    "Detenido"
+  ],
+  "감지확인 필요": [
+    "Detection uncertain",
+    "감지확인 필요",
+    "検出の確認が必要",
+    "检测待确认",
+    "Detección incierta"
+  ],
+  "Codex 펫": [
+    "Codex Tray Pet",
+    "Codex 펫",
+    "Codex トレイペット",
+    "Codex 托盘宠物",
+    "Codex Tray Pet"
+  ],
+  "사용량 제한으로 중지": [
+    "Usage limit reached",
+    "사용량 제한으로 중지",
+    "使用量制限で停止",
+    "已达用量限制",
+    "Límite de uso alcanzado"
+  ],
+  " · 미리보기": [
+    " · Preview",
+    " · 미리보기",
+    " · プレビュー",
+    " · 预览",
+    " · Vista previa"
+  ],
+  " · 10분 이상 작업 있음": [
+    " · Task over 10 min",
+    " · 10분 이상 작업 있음",
+    " · 10分以上の作業",
+    " · 有任务超过10分钟",
+    " · Tarea de más de 10 min"
+  ],
+  "Codex 펫 · %ls%ls · 미확인 완료 %d개%ls": [
+    "Codex Pet · %ls%ls · Unread %d%ls",
+    "Codex 펫 · %ls%ls · 미확인 완료 %d개%ls",
+    "Codex ペット · %ls%ls · 未読 %d%ls",
+    "Codex 宠物 · %ls%ls · 未读 %d%ls",
+    "Codex Pet · %ls%ls · Sin leer %d%ls"
+  ],
+  "상태: %ls": [
+    "Status: %ls",
+    "상태: %ls",
+    "状態: %ls",
+    "状态：%ls",
+    "Estado: %ls"
+  ],
+  "자동 감지": [
+    "Automatic detection",
+    "자동 감지",
+    "自動検出",
+    "自动检测",
+    "Detección automática"
+  ],
+  "완료·오류·중지 확인": [
+    "Acknowledge completed / error / stopped",
+    "완료·오류·중지 확인",
+    "完了・エラー・停止を確認",
+    "确认完成、错误和停止",
+    "Confirmar completado / error / detenido"
+  ],
+  "상태 미리보기": [
+    "State preview",
+    "상태 미리보기",
+    "状態プレビュー",
+    "状态预览",
+    "Vista previa del estado"
+  ],
+  "사용량 제한 경고": [
+    "Usage-limit alert",
+    "사용량 제한 경고",
+    "使用量制限の警告",
+    "用量限制警告",
+    "Aviso de límite de uso"
+  ],
+  "10분 이상 작업": [
+    "Task over 10 minutes",
+    "10분 이상 작업",
+    "10分以上の作業",
+    "超过10分钟的任务",
+    "Tarea de más de 10 minutos"
+  ],
+  "미확인 완료 숫자": [
+    "Unread-result counter",
+    "미확인 완료 숫자",
+    "未読結果の件数",
+    "未读结果数量",
+    "Contador de resultados sin leer"
+  ],
+  "사용량 제한 알림 확인": [
+    "Acknowledge usage-limit alert",
+    "사용량 제한 알림 확인",
+    "使用量制限の通知を確認",
+    "确认用量限制提示",
+    "Confirmar aviso de límite de uso"
+  ],
+  "숫자 배지 색상": [
+    "Counter color",
+    "숫자 배지 색상",
+    "件数バッジの色",
+    "数量徽标颜色",
+    "Color del contador"
+  ],
+  "움직임·색 변화": [
+    "Animation and color changes",
+    "움직임·색 변화",
+    "動き・色の変化",
+    "动画与颜色变化",
+    "Animación y cambios de color"
+  ],
+  "아이콘 변경...": [
+    "Change icon...",
+    "아이콘 변경...",
+    "アイコンを変更...",
+    "更换图标...",
+    "Cambiar icono..."
+  ],
+  "브라우저에서 설정 열기...": [
+    "Open settings in browser...",
+    "브라우저에서 설정 열기...",
+    "ブラウザーで設定を開く...",
+    "在浏览器中打开设置...",
+    "Abrir ajustes en el navegador..."
+  ],
+  "이번 코덱스 실행 동안 펫 숨기기": [
+    "Hide pet for this Codex run",
+    "이번 코덱스 실행 동안 펫 숨기기",
+    "今回のCodex起動中は非表示",
+    "本次Codex运行期间隐藏宠物",
+    "Ocultar durante esta ejecución de Codex"
+  ],
+  "감시 프로그램 종료": [
+    "Stop watcher",
+    "감시 프로그램 종료",
+    "監視プログラムを終了",
+    "退出监视程序",
+    "Detener monitor"
+  ],
+  "차콜": [
+    "Charcoal",
+    "차콜",
+    "チャコール",
+    "炭灰",
+    "Carbón"
+  ],
+  "빨강 · 기본값": [
+    "Red · default",
+    "빨강 · 기본값",
+    "赤・初期値",
+    "红色 · 默认",
+    "Rojo · predeterminado"
+  ],
+  "파랑": [
+    "Blue",
+    "파랑",
+    "青",
+    "蓝色",
+    "Azul"
+  ],
+  "초록": [
+    "Green",
+    "초록",
+    "緑",
+    "绿色",
+    "Verde"
+  ],
+  "보라": [
+    "Purple",
+    "보라",
+    "紫",
+    "紫色",
+    "Morado"
+  ],
+  "흰색": [
+    "White",
+    "흰색",
+    "白",
+    "白色",
+    "Blanco"
+  ],
+  "언어": [
+    "Language",
+    "언어",
+    "言語",
+    "语言",
+    "Idioma"
+  ],
+  "설정을 저장하지 못했습니다.": [
+    "Could not save settings.",
+    "설정을 저장하지 못했습니다.",
+    "設定を保存できませんでした。",
+    "无法保存设置。",
+    "No se pudieron guardar los ajustes."
+  ],
+  "세션": [
+    "Sessions",
+    "세션",
+    "セッション",
+    "会话",
+    "Sesiones"
+  ],
+  "설정": [
+    "Settings",
+    "설정",
+    "設定",
+    "设置",
+    "Ajustes"
+  ],
+  "표시할 세션이 없습니다.": [
+    "No sessions to display.",
+    "표시할 세션이 없습니다.",
+    "表示するセッションはありません。",
+    "没有可显示的会话。",
+    "No hay sesiones para mostrar."
+  ],
+  "제목 확인 중": [
+    "Loading title",
+    "제목 확인 중",
+    "タイトルを確認中",
+    "正在读取标题",
+    "Cargando título"
+  ],
+  "읽음 상태를 동기화할 수 없습니다.": [
+    "Could not sync read state.",
+    "읽음 상태를 동기화할 수 없습니다.",
+    "既読状態を同期できません。",
+    "无法同步已读状态。",
+    "No se pudo sincronizar el estado de lectura."
+  ],
+  "%d–%d / %d · 휠로 보기": [
+    "%d–%d / %d · Scroll to see more",
+    "%d–%d / %d · 휠로 보기",
+    "%d–%d / %d · スクロールで表示",
+    "%d–%d / %d · 滚动查看",
+    "%d–%d / %d · Desplázate para ver más"
+  ],
+  "코덱스 세션": [
+    "Codex sessions",
+    "코덱스 세션",
+    "Codex セッション",
+    "Codex 会话",
+    "Sesiones de Codex"
+  ],
+  "코덱스 프로젝트": [
+    "Codex project",
+    "코덱스 프로젝트",
+    "Codex プロジェクト",
+    "Codex 项目",
+    "Proyecto de Codex"
+  ],
+  "Codex 세션 링크를 실행할 수 없습니다.": [
+    "Could not launch the Codex session link.",
+    "Codex 세션 링크를 실행할 수 없습니다.",
+    "Codexのセッションリンクを実行できません。",
+    "无法启动Codex会话链接。",
+    "No se pudo abrir el enlace de la sesión de Codex."
+  ],
+  "Codex 세션 링크를 열 수 없습니다. Codex 앱의 URL 연결을 확인해 주세요.": [
+    "Could not open the session. Check Codex's URL association.",
+    "Codex 세션 링크를 열 수 없습니다. Codex 앱의 URL 연결을 확인해 주세요.",
+    "セッションを開けません。CodexのURL関連付けを確認してください。",
+    "无法打开会话。请检查Codex的URL关联。",
+    "No se pudo abrir la sesión. Comprueba la asociación de URL de Codex."
+  ],
+  "브라우저 설정을 열지 못했습니다.": [
+    "Could not open browser settings.",
+    "브라우저 설정을 열지 못했습니다.",
+    "ブラウザー設定を開けませんでした。",
+    "无法打开浏览器设置。",
+    "No se pudieron abrir los ajustes del navegador."
+  ],
+  "브라우저를 실행하지 못했습니다.": [
+    "Could not start the browser.",
+    "브라우저를 실행하지 못했습니다.",
+    "ブラウザーを起動できませんでした。",
+    "无法启动浏览器。",
+    "No se pudo iniciar el navegador."
+  ],
+  "Codex 펫 설정": [
+    "Codex Pet Settings",
+    "Codex 펫 설정",
+    "Codex ペット設定",
+    "Codex 宠物设置",
+    "Ajustes de Codex Pet"
+  ],
+  "시계 옆 펫의 모습과 알림을 바꿉니다.": [
+    "Change your tray pet's appearance and notifications.",
+    "시계 옆 펫의 모습과 알림을 바꿉니다.",
+    "トレイペットの見た目と通知を変更します。",
+    "更改托盘宠物的外观和通知。",
+    "Cambia la apariencia y las notificaciones de tu mascota."
+  ],
+  "새로고침": [
+    "Refresh",
+    "새로고침",
+    "更新",
+    "刷新",
+    "Actualizar"
+  ],
+  "아이콘 미리보기": [
+    "Icon preview",
+    "아이콘 미리보기",
+    "アイコンのプレビュー",
+    "图标预览",
+    "Vista previa del icono"
+  ],
+  "연결 중": [
+    "Connecting",
+    "연결 중",
+    "接続中",
+    "正在连接",
+    "Conectando"
+  ],
+  "현재 펫의 설정을 불러오고 있습니다.": [
+    "Loading pet settings.",
+    "현재 펫의 설정을 불러오고 있습니다.",
+    "ペットの設定を読み込み中です。",
+    "正在加载宠物设置。",
+    "Cargando los ajustes de la mascota."
+  ],
+  "설정 항목": [
+    "Settings sections",
+    "설정 항목",
+    "設定項目",
+    "设置栏目",
+    "Secciones de ajustes"
+  ],
+  "아이콘": [
+    "Icon",
+    "아이콘",
+    "アイコン",
+    "图标",
+    "Icono"
+  ],
+  "표시": [
+    "Display",
+    "표시",
+    "表示",
+    "显示",
+    "Visualización"
+  ],
+  "알림": [
+    "Notifications",
+    "알림",
+    "通知",
+    "通知",
+    "Notificaciones"
+  ],
+  "설정 연결 중입니다.": [
+    "Connecting to settings.",
+    "설정 연결 중입니다.",
+    "設定に接続中です。",
+    "正在连接设置。",
+    "Conectando con los ajustes."
+  ],
+  "기본 고양이": [
+    "Default cat",
+    "기본 고양이",
+    "標準の猫",
+    "默认小猫",
+    "Gato predeterminado"
+  ],
+  "등록한 아이콘": [
+    "Uploaded icon",
+    "등록한 아이콘",
+    "登録済みアイコン",
+    "已上传的图标",
+    "Icono subido"
+  ],
+  "아이콘 선택 저장": [
+    "Save icon choice",
+    "아이콘 선택 저장",
+    "アイコン選択を保存",
+    "保存图标选择",
+    "Guardar selección de icono"
+  ],
+  "등록한 아이콘은 원래 색을 유지합니다. 상태별 모션으로 반응하며, 질문·경고 표시와 완료 숫자를 함께 보여줍니다.": [
+    "Uploaded icons keep their original colors. State motion, question and warning markers, and unread counters are added by the pet.",
+    "등록한 아이콘은 원래 색을 유지합니다. 상태별 모션으로 반응하며, 질문·경고 표시와 완료 숫자를 함께 보여줍니다.",
+    "登録画像の色を維持し、状態の動き・質問・警告・未読件数をペットが追加します。",
+    "上传图标保留原色，宠物会添加状态动作、问题和警告标记及未读数量。",
+    "Los iconos conservan sus colores. La mascota añade movimientos de estado, avisos, preguntas y contadores sin leer."
+  ],
+  "움직이는 아이콘 등록": [
+    "Upload animated icon",
+    "움직이는 아이콘 등록",
+    "動くアイコンを登録",
+    "上传动态图标",
+    "Subir icono animado"
+  ],
+  "GIF 한 개, 또는 파일명 순서로 재생할 PNG·ICO 이미지를 선택하세요.": [
+    "Choose one GIF, or PNG/ICO images played in filename order.",
+    "GIF 한 개, 또는 파일명 순서로 재생할 PNG·ICO 이미지를 선택하세요.",
+    "GIFを1つ、またはファイル名順で再生するPNG・ICOを選択してください。",
+    "选择一个GIF，或按文件名顺序播放的PNG/ICO图片。",
+    "Elige un GIF o imágenes PNG/ICO para reproducir por nombre de archivo."
+  ],
+  "등록할 상태": [
+    "Target state",
+    "등록할 상태",
+    "登録する状態",
+    "目标状态",
+    "Estado de destino"
+  ],
+  "공통 · 상태별 등록이 없을 때": [
+    "Shared · fallback for states",
+    "공통 · 상태별 등록이 없을 때",
+    "共通・状態別画像がない場合",
+    "共用 · 状态未注册时使用",
+    "Común · alternativa para estados"
+  ],
+  "프레임 간격": [
+    "Frame interval",
+    "프레임 간격",
+    "フレーム間隔",
+    "帧间隔",
+    "Intervalo de fotogramas"
+  ],
+  "PNG·ICO에 적용됩니다. GIF는 원래 속도를 참고해 변환합니다.": [
+    "Applies to PNG/ICO. GIF timing is derived from its source.",
+    "PNG·ICO에 적용됩니다. GIF는 원래 속도를 참고해 변환합니다.",
+    "PNG・ICOに適用します。GIFは元の速度から変換します。",
+    "适用于PNG/ICO，GIF参考原始速度转换。",
+    "Se aplica a PNG/ICO. El GIF usa los tiempos del original."
+  ],
+  "아직 준비한 아이콘이 없습니다.": [
+    "No icon prepared yet.",
+    "아직 준비한 아이콘이 없습니다.",
+    "まだアイコンを準備していません。",
+    "尚未准备图标。",
+    "Aún no hay un icono preparado."
+  ],
+  "변환·미리보기": [
+    "Convert and preview",
+    "변환·미리보기",
+    "変換・プレビュー",
+    "转换与预览",
+    "Convertir y previsualizar"
+  ],
+  "이 아이콘 적용": [
+    "Apply this icon",
+    "이 아이콘 적용",
+    "このアイコンを適用",
+    "应用此图标",
+    "Aplicar este icono"
+  ],
+  "현재 아이콘 보기": [
+    "Show current icon",
+    "현재 아이콘 보기",
+    "現在のアイコンを表示",
+    "显示当前图标",
+    "Mostrar icono actual"
+  ],
+  "ChatGPT로 움직이는 펫 만들기": [
+    "Create an animated pet with ChatGPT",
+    "ChatGPT로 움직이는 펫 만들기",
+    "ChatGPTで動くペットを作成",
+    "用ChatGPT制作动态宠物",
+    "Crear una mascota animada con ChatGPT"
+  ],
+  "캐릭터와 모션을 정하고 프롬프트를 복사해 웹 ChatGPT에 붙여넣으세요. 참고 캐릭터 이미지가 있으면 그 채팅에 함께 첨부하세요.": [
+    "Choose a character and motion, then copy the prompt into web ChatGPT. Attach reference images in that chat.",
+    "캐릭터와 모션을 정하고 프롬프트를 복사해 웹 ChatGPT에 붙여넣으세요. 참고 캐릭터 이미지가 있으면 그 채팅에 함께 첨부하세요.",
+    "キャラクターと動きを選び、プロンプトをWeb版ChatGPTに貼り付けてください。参考画像も添付してください。",
+    "选择角色和动作，将提示词复制到网页版ChatGPT，并在该聊天中附上参考图片。",
+    "Elige personaje y movimiento, copia el prompt en ChatGPT web y adjunta allí las imágenes de referencia."
+  ],
+  "원하는 캐릭터": [
+    "Character",
+    "원하는 캐릭터",
+    "キャラクター",
+    "角色",
+    "Personaje"
+  ],
+  "예: 둥근 얼굴의 하얀 유령. 보라색 모자, 짧은 팔, 단순하고 선명한 윤곽.": [
+    "Example: a round white ghost with a purple hat, short arms, and a clear outline.",
+    "예: 둥근 얼굴의 하얀 유령. 보라색 모자, 짧은 팔, 단순하고 선명한 윤곽.",
+    "例：丸い白いおばけ。紫の帽子、短い腕、シンプルで明瞭な輪郭。",
+    "例如：圆脸白色幽灵，紫色帽子、短手臂和清晰轮廓。",
+    "Ejemplo: fantasma blanco redondo con sombrero morado, brazos cortos y contorno claro."
+  ],
+  "원하는 모션": [
+    "Motion",
+    "원하는 모션",
+    "動き",
+    "动作",
+    "Movimiento"
+  ],
+  "역동적인 혼합 · 바운스·진동·밝기": [
+    "Energetic mix · bounce, shake, brightness",
+    "역동적인 혼합 · 바운스·진동·밝기",
+    "動きの組合せ・上下・振動・明るさ",
+    "动态组合 · 弹跳、摇动、亮度",
+    "Mezcla dinámica · rebote, vibración, brillo"
+  ],
+  "밝기 점멸 · 밝아졌다 어두워짐": [
+    "Brightness pulse",
+    "밝기 점멸 · 밝아졌다 어두워짐",
+    "明るさの点滅",
+    "亮度闪烁",
+    "Pulso de brillo"
+  ],
+  "상하 바운스 · 눌렸다 튀어 오름": [
+    "Vertical bounce · squash and stretch",
+    "상하 바운스 · 눌렸다 튀어 오름",
+    "上下バウンド・押しつぶしと伸び",
+    "上下弹跳 · 压缩与拉伸",
+    "Rebote vertical · compresión y estiramiento"
+  ],
+  "좌우 진동 · 몸과 소품 흔들림": [
+    "Sideways shake · body and accessories",
+    "좌우 진동 · 몸과 소품 흔들림",
+    "左右の振動・体と小物",
+    "左右摇动 · 身体和配件",
+    "Vibración lateral · cuerpo y accesorios"
+  ],
+  "격한 흔들림 · 점프·좌우 회전": [
+    "Wild motion · jumps and rotation",
+    "격한 흔들림 · 점프·좌우 회전",
+    "激しい動き・ジャンプと回転",
+    "剧烈动作 · 跳跃和旋转",
+    "Movimiento intenso · saltos y giros"
+  ],
+  "제작 기준 간격": [
+    "Prompt frame interval",
+    "제작 기준 간격",
+    "制作指定の間隔",
+    "制作帧间隔",
+    "Intervalo para el prompt"
+  ],
+  "150ms · 빠르게": [
+    "150ms · fast",
+    "150ms · 빠르게",
+    "150ms・速い",
+    "150ms · 快速",
+    "150ms · rápido"
+  ],
+  "200ms · 역동적으로": [
+    "200ms · energetic",
+    "200ms · 역동적으로",
+    "200ms・躍動的",
+    "200ms · 动感",
+    "200ms · dinámico"
+  ],
+  "300ms · 보통": [
+    "300ms · normal",
+    "300ms · 보통",
+    "300ms・通常",
+    "300ms · 普通",
+    "300ms · normal"
+  ],
+  "500ms · 느리게": [
+    "500ms · slow",
+    "500ms · 느리게",
+    "500ms・ゆっくり",
+    "500ms · 慢速",
+    "500ms · lento"
+  ],
+  "이 선택은 제작 요청에만 들어갑니다. 등록할 때 위의 프레임 간격도 같은 값으로 맞추세요. 8프레임·200ms면 한 바퀴가 1.6초입니다.": [
+    "This interval only affects the prompt. Use the same interval when uploading. Eight frames at 200ms loop in 1.6 seconds.",
+    "이 선택은 제작 요청에만 들어갑니다. 등록할 때 위의 프레임 간격도 같은 값으로 맞추세요. 8프레임·200ms면 한 바퀴가 1.6초입니다.",
+    "この間隔は制作依頼だけに反映します。登録時も同じ値にしてください。8フレーム×200msは1.6秒です。",
+    "此间隔仅用于提示词。上传时也设置相同值。8帧×200ms循环为1.6秒。",
+    "Este intervalo solo afecta al prompt. Usa el mismo al subir imágenes. Ocho fotogramas a 200ms duran 1,6 segundos."
+  ],
+  "ChatGPT에 입력할 프롬프트": [
+    "Prompt for ChatGPT",
+    "ChatGPT에 입력할 프롬프트",
+    "ChatGPTへのプロンプト",
+    "ChatGPT提示词",
+    "Prompt para ChatGPT"
+  ],
+  "프롬프트 복사": [
+    "Copy prompt",
+    "프롬프트 복사",
+    "プロンプトをコピー",
+    "复制提示词",
+    "Copiar prompt"
+  ],
+  "권장: 128×128px 투명 PNG 8장.": [
+    "Recommended: eight transparent 128×128 PNGs.",
+    "권장: 128×128px 투명 PNG 8장.",
+    "推奨：128×128の透過PNGを8枚。",
+    "推荐：8张128×128透明PNG。",
+    "Recomendado: ocho PNG transparentes de 128×128."
+  ],
+  "같은 크기·같은 캔버스 기준을 유지하고 캐릭터가 이동할 여백을 남기세요.": [
+    "Keep the same canvas and size, with room for movement.",
+    "같은 크기·같은 캔버스 기준을 유지하고 캐릭터가 이동할 여백을 남기세요.",
+    "同じサイズ・キャンバスを維持し、動く余白を残してください。",
+    "保持相同尺寸和画布，为移动留出空间。",
+    "Mantén el mismo lienzo y tamaño, con margen para moverse."
+  ],
+  "각 파일은 1MB 이하·가로세로 각각 512px 이하입니다. 큰 원본은 최종 PNG를 작게 내보내야 등록할 수 있습니다.": [
+    "Each file must be at most 1MiB and 512px per side. Resize large source images before uploading.",
+    "각 파일은 1MB 이하·가로세로 각각 512px 이하입니다. 큰 원본은 최종 PNG를 작게 내보내야 등록할 수 있습니다.",
+    "各ファイルは1MiB以下、縦横512px以下です。大きな原画は縮小してから登録してください。",
+    "每个文件最多1MiB，宽高各不超过512px。上传前缩小大图。",
+    "Cada archivo debe tener como máximo 1MiB y 512px por lado. Reduce los originales grandes antes de subirlos."
+  ],
+  "단순한 눈 깜빡임 외에 위치·회전·밝기가 바뀌는 프레임도 재생합니다. 마지막 프레임과 첫 프레임을 이어 주세요.": [
+    "Position, rotation, and brightness changes are supported. Make the last frame join smoothly to the first.",
+    "단순한 눈 깜빡임 외에 위치·회전·밝기가 바뀌는 프레임도 재생합니다. 마지막 프레임과 첫 프레임을 이어 주세요.",
+    "位置・回転・明るさの変化も再生します。最後から最初へ自然につなげてください。",
+    "支持位置、旋转和亮度变化。让最后一帧自然衔接第一帧。",
+    "Se admiten cambios de posición, giro y brillo. Une el último fotograma con el primero."
+  ],
+  "로 이름을 붙이세요. 선택한 PNG·ICO는 파일명 순으로 재생합니다. ZIP은 먼저 풀고, 스프라이트 시트는 개별 PNG로 나눠야 합니다.": [
+    "are the filenames. PNG/ICO play in filename order. Extract ZIPs and split sprite sheets into separate PNGs.",
+    "로 이름을 붙이세요. 선택한 PNG·ICO는 파일명 순으로 재생합니다. ZIP은 먼저 풀고, 스프라이트 시트는 개별 PNG로 나눠야 합니다.",
+    "という名前にしてください。PNG・ICOは名前順です。ZIPは展開し、シートは個別PNGに分割してください。",
+    "为文件名。PNG/ICO按文件名播放。先解压ZIP，并将精灵表拆成单独PNG。",
+    "son los nombres. PNG/ICO se reproducen por nombre. Extrae los ZIP y divide las hojas de sprites en PNG individuales."
+  ],
+  "캐릭터의 위치가 바뀐 여백까지 유지하세요. 각 프레임을 따로 잘라 중앙 정렬하면 이동 모션이 사라집니다.": [
+    "Keep movement margins. Cropping and centering each frame separately removes the movement.",
+    "캐릭터의 위치가 바뀐 여백까지 유지하세요. 각 프레임을 따로 잘라 중앙 정렬하면 이동 모션이 사라집니다.",
+    "移動した余白を維持してください。各フレームを別々に切って中央にすると移動が消えます。",
+    "保留位移边距。逐帧裁剪并居中会消除移动效果。",
+    "Conserva los márgenes de movimiento. Recortar y centrar cada fotograma elimina el desplazamiento."
+  ],
+  "상태별로 최대 8장씩 등록할 수 있습니다. 등록할 상태를 선택하고 해당 세트만 올리세요. 상태 색상·질문·경고·완료 숫자는 펫이 붙입니다.": [
+    "Upload up to eight frames per state. Select a state and upload only its set. The pet adds status indicators and unread counters.",
+    "상태별로 최대 8장씩 등록할 수 있습니다. 등록할 상태를 선택하고 해당 세트만 올리세요. 상태 색상·질문·경고·완료 숫자는 펫이 붙입니다.",
+    "状態ごとに最大8枚です。状態を選んでそのセットだけ登録してください。状態・質問・警告・件数はペットが追加します。",
+    "每个状态最多8帧。选择状态后只上传该组。宠物会添加状态、问题、警告和数量标记。",
+    "Sube hasta ocho fotogramas por estado. Selecciona el estado y sube solo su conjunto. La mascota añade indicadores y contadores."
+  ],
+  "ChatGPT가 투명도·정확한 규격·다운로드 파일을 항상 한 번에 맞추는 것은 아닙니다. 실제 파일을 확인한 뒤 변환·미리보기로 재생을 확인하세요.": [
+    "ChatGPT may not produce correct transparency, dimensions, or downloadable files on the first try. Check the files and conversion preview.",
+    "ChatGPT가 투명도·정확한 규격·다운로드 파일을 항상 한 번에 맞추는 것은 아닙니다. 실제 파일을 확인한 뒤 변환·미리보기로 재생을 확인하세요.",
+    "ChatGPTが一度で透明度・寸法・ダウンロードを満たすとは限りません。ファイルと変換プレビューを確認してください。",
+    "ChatGPT不一定一次就生成正确透明度、尺寸和下载文件。请检查文件和转换预览。",
+    "ChatGPT puede fallar en transparencia, dimensiones o archivos descargables. Comprueba los archivos y la vista previa."
+  ],
+  "투명 배경과 참고 이미지의 유지 조건을 구체적으로 쓰는 방식은": [
+    "Guidance for transparency and preserving reference images follows the",
+    "투명 배경과 참고 이미지의 유지 조건을 구체적으로 쓰는 방식은",
+    "透明背景と参考画像の維持条件は",
+    "透明背景和保留参考图片的说明参考了",
+    "Las indicaciones de transparencia y conservación de referencias siguen la"
+  ],
+  "OpenAI 공식 이미지 프롬프트 가이드": [
+    "official OpenAI image prompting guide",
+    "OpenAI 공식 이미지 프롬프트 가이드",
+    "OpenAI公式画像プロンプトガイド",
+    "OpenAI官方图像提示指南",
+    "guía oficial de prompts de imágenes de OpenAI"
+  ],
+  "를 참고했습니다.": [
+    ".",
+    "를 참고했습니다.",
+    "を参考にしています。",
+    "。",
+    "."
+  ],
+  "파일과 애니메이션 규칙": [
+    "File and animation rules",
+    "파일과 애니메이션 규칙",
+    "ファイルとアニメーションの規則",
+    "文件与动画规则",
+    "Normas de archivos y animación"
+  ],
+  "GIF는 한 개, PNG·ICO는 1~8장입니다. 두 장을 넣으면 번갈아 재생합니다.": [
+    "One GIF or 1–8 PNG/ICO images. Two images alternate.",
+    "GIF는 한 개, PNG·ICO는 1~8장입니다. 두 장을 넣으면 번갈아 재생합니다.",
+    "GIFは1つ、PNG・ICOは1～8枚です。2枚なら交互に再生します。",
+    "一个GIF或1–8张PNG/ICO，两张图片交替播放。",
+    "Un GIF o de 1 a 8 PNG/ICO. Dos imágenes se alternan."
+  ],
+  "파일은 각각 1MB 이하, 가로·세로는 각각 512px 이하입니다.": [
+    "Each file: at most 1MiB, width and height at most 512px.",
+    "파일은 각각 1MB 이하, 가로·세로는 각각 512px 이하입니다.",
+    "各ファイルは1MiB以下、縦横512px以下です。",
+    "每个文件最多1MiB，宽高各不超过512px。",
+    "Cada archivo: máximo 1MiB y 512px de ancho y alto."
+  ],
+  "GIF 원본은 최대 120프레임입니다. 최대 8프레임을 골고루 뽑아 저장합니다.": [
+    "GIF source: at most 120 frames; up to eight frames are sampled evenly.",
+    "GIF 원본은 최대 120프레임입니다. 최대 8프레임을 골고루 뽑아 저장합니다.",
+    "GIF原本は最大120フレーム、最大8枚を均等に抽出して保存します。",
+    "GIF原始帧最多120，均匀抽取最多8帧保存。",
+    "GIF original: máximo 120 fotogramas; se guardan hasta ocho distribuidos uniformemente."
+  ],
+  "32×32 크기에 맞추고 투명 배경을 유지합니다. 세트 전체의 공통 여백을 줄여 크게 표시하고 이동 위치는 유지합니다.": [
+    "Converted to 32×32 with transparency. A shared crop enlarges the set while keeping frame movement.",
+    "32×32 크기에 맞추고 투명 배경을 유지합니다. 세트 전체의 공통 여백을 줄여 크게 표시하고 이동 위치는 유지합니다.",
+    "透過を維持して32×32へ変換します。共通の余白を減らし、フレーム間の移動は残します。",
+    "转换为32×32并保留透明度，共用裁剪放大图片且保留位移。",
+    "Se convierte a 32×32 con transparencia. Un recorte común amplía el conjunto y conserva el movimiento."
+  ],
+  "저장 후 재생 간격은 150~2,000ms입니다. 너무 빠른 GIF는 느려질 수 있습니다.": [
+    "Stored intervals: 150–2,000ms. Very fast GIFs may play slower.",
+    "저장 후 재생 간격은 150~2,000ms입니다. 너무 빠른 GIF는 느려질 수 있습니다.",
+    "保存後の間隔は150～2,000msです。速すぎるGIFは遅くなることがあります。",
+    "保存间隔为150–2,000ms，过快GIF可能变慢。",
+    "Intervalos guardados: 150–2.000ms. Los GIF muy rápidos pueden reproducirse más despacio."
+  ],
+  "8프레임의 픽셀 데이터는 약 32KB입니다. Windows 아이콘 관리 비용과 브라우저의 일시적인 변환 메모리는 별도입니다.": [
+    "Eight frames use 32KiB of pixels. Windows icon costs and temporary browser conversion memory are separate.",
+    "8프레임의 픽셀 데이터는 약 32KB입니다. Windows 아이콘 관리 비용과 브라우저의 일시적인 변환 메모리는 별도입니다.",
+    "8枚の画素は32KiBです。Windowsのアイコンとブラウザー変換時のメモリーは別です。",
+    "8帧像素占32KiB，Windows图标和浏览器转换的临时内存另计。",
+    "Ocho fotogramas usan 32KiB de píxeles. Los iconos de Windows y la conversión temporal del navegador requieren memoria adicional."
+  ],
+  "원본 GIF는 펫에 저장하지 않습니다. 아이콘 선택은 다시 실행해도 유지됩니다.": [
+    "The original GIF is not stored in the pet. Icon choices survive restarts.",
+    "원본 GIF는 펫에 저장하지 않습니다. 아이콘 선택은 다시 실행해도 유지됩니다.",
+    "元のGIFは保存しません。アイコン選択は再起動後も保持します。",
+    "宠物不保存原始GIF，重启后保留图标选择。",
+    "La mascota no guarda el GIF original. La selección de icono se conserva al reiniciar."
+  ],
+  "표시 설정 저장": [
+    "Save display settings",
+    "표시 설정 저장",
+    "表示設定を保存",
+    "保存显示设置",
+    "Guardar ajustes de visualización"
+  ],
+  "적용": [
+    "Apply",
+    "적용",
+    "適用",
+    "应用",
+    "Aplicar"
+  ],
+  "미리보기는 트레이 표시를 바꿉니다. 자동 감지로 돌아가면 실제 상태를 표시합니다.": [
+    "Preview changes the tray icon. Return to automatic detection to show the real state.",
+    "미리보기는 트레이 표시를 바꿉니다. 자동 감지로 돌아가면 실제 상태를 표시합니다.",
+    "プレビューはトレイ表示も変更します。自動検出に戻すと実際の状態を表示します。",
+    "预览会改变托盘显示，返回自动检测后显示真实状态。",
+    "La vista previa cambia el icono. Vuelve a detección automática para ver el estado real."
+  ],
+  "Codex의 읽음 상태나 사용량을 변경하지 않습니다.": [
+    "This does not change Codex read state or account usage.",
+    "Codex의 읽음 상태나 사용량을 변경하지 않습니다.",
+    "Codexの既読状態や使用量は変更しません。",
+    "不会更改Codex已读状态或账号用量。",
+    "No cambia el estado de lectura ni el uso de la cuenta de Codex."
+  ],
+  "이번 실행 동안 펫 숨기기": [
+    "Hide pet for this run",
+    "이번 실행 동안 펫 숨기기",
+    "今回の起動中は非表示",
+    "本次运行期间隐藏宠物",
+    "Ocultar mascota durante esta ejecución"
+  ],
+  "설정은 이 컴퓨터에서만 적용됩니다. 10분 동안 조작하지 않으면 설정 연결이 닫힙니다. 다시 열려면 펫의 설정 메뉴를 사용하세요.": [
+    "Settings apply only on this computer. The connection closes after 10 minutes without API requests. Reopen it from the pet menu.",
+    "설정은 이 컴퓨터에서만 적용됩니다. 10분 동안 조작하지 않으면 설정 연결이 닫힙니다. 다시 열려면 펫의 설정 메뉴를 사용하세요.",
+    "設定はこのPCだけに適用します。APIリクエストが10分なければ接続を閉じます。ペットのメニューから開き直してください。",
+    "设置只作用于本机，10分钟无API请求后关闭连接。可从宠物菜单重新打开。",
+    "Los ajustes solo se aplican a este equipo. Tras 10 minutos sin peticiones API se cierra la conexión. Ábrela de nuevo desde el menú."
+  ],
+  "설정 연결 닫기": [
+    "Close settings connection",
+    "설정 연결 닫기",
+    "設定接続を閉じる",
+    "关闭设置连接",
+    "Cerrar conexión de ajustes"
+  ],
+  "프롬프트를 복사했습니다. 웹 ChatGPT에 붙여넣으세요.": [
+    "Prompt copied. Paste it into web ChatGPT.",
+    "프롬프트를 복사했습니다. 웹 ChatGPT에 붙여넣으세요.",
+    "コピーしました。Web版ChatGPTに貼り付けてください。",
+    "已复制提示词，请粘贴到网页版ChatGPT。",
+    "Prompt copiado. Pégalo en ChatGPT web."
+  ],
+  "자동 복사가 막혔습니다. 선택된 프롬프트를 Ctrl+C로 복사하세요.": [
+    "Automatic copying was blocked. Copy the selected prompt with Ctrl+C.",
+    "자동 복사가 막혔습니다. 선택된 프롬프트를 Ctrl+C로 복사하세요.",
+    "自動コピーが禁止されました。選択した文をCtrl+Cでコピーしてください。",
+    "自动复制被阻止，请按Ctrl+C复制已选提示词。",
+    "Se bloqueó la copia automática. Copia el prompt seleccionado con Ctrl+C."
+  ],
+  "설정 연결이 닫혔습니다. 펫의 설정 메뉴에서 다시 열어주세요.": [
+    "Settings connection closed. Reopen it from the pet menu.",
+    "설정 연결이 닫혔습니다. 펫의 설정 메뉴에서 다시 열어주세요.",
+    "設定接続を閉じました。メニューから開き直してください。",
+    "设置连接已关闭，请从宠物菜单重新打开。",
+    "Se cerró la conexión. Ábrela desde el menú de la mascota."
+  ],
+  "펫과 연결할 수 없습니다. 설정 메뉴에서 다시 열어주세요.": [
+    "Cannot connect to the pet. Reopen settings from its menu.",
+    "펫과 연결할 수 없습니다. 설정 메뉴에서 다시 열어주세요.",
+    "ペットに接続できません。メニューから設定を開き直してください。",
+    "无法连接宠物，请从菜单重新打开设置。",
+    "No se puede conectar con la mascota. Abre los ajustes desde su menú."
+  ],
+  "설정 연결이 만료되었습니다. 설정 메뉴에서 다시 열어주세요.": [
+    "Settings access expired. Reopen it from the pet menu.",
+    "설정 연결이 만료되었습니다. 설정 메뉴에서 다시 열어주세요.",
+    "接続が期限切れです。メニューから開き直してください。",
+    "设置连接已过期，请从菜单重新打开。",
+    "El acceso ha caducado. Ábrelo desde el menú."
+  ],
+  "변경을 적용하지 못했습니다. ": [
+    "Could not apply changes. ",
+    "변경을 적용하지 못했습니다. ",
+    "変更を適用できませんでした。",
+    "无法应用更改。",
+    "No se pudieron aplicar los cambios. "
+  ],
+  "아이콘 형식이 올바르지 않습니다.": [
+    "Invalid icon format.",
+    "아이콘 형식이 올바르지 않습니다.",
+    "アイコン形式が不正です。",
+    "图标格式无效。",
+    "Formato de icono no válido."
+  ],
+  "아이콘 크기가 올바르지 않습니다.": [
+    "Invalid icon size.",
+    "아이콘 크기가 올바르지 않습니다.",
+    "アイコンサイズが不正です。",
+    "图标大小无效。",
+    "Tamaño de icono no válido."
+  ],
+  " · 정지 미리보기": [
+    " · Still preview",
+    " · 정지 미리보기",
+    " · 静止プレビュー",
+    " · 静态预览",
+    " · Vista previa estática"
+  ],
+  "프레임": [
+    " frames",
+    "프레임",
+    "フレーム",
+    "帧",
+    " fotogramas"
+  ],
+  "등록됨": [
+    "Uploaded",
+    "등록됨",
+    "登録済み",
+    "已上传",
+    "Subido"
+  ],
+  "등록 전": [
+    "Not uploaded",
+    "등록 전",
+    "未登録",
+    "未上传",
+    "Sin subir"
+  ],
+  "미확인 완료 ": [
+    "Unread results: ",
+    "미확인 완료 ",
+    "未読結果：",
+    "未读结果：",
+    "Resultados sin leer: "
+  ],
+  "개 · ": [
+    " · ",
+    "개 · ",
+    "件 · ",
+    "个 · ",
+    " · "
+  ],
+  "저장된 픽셀 ": [
+    "Stored pixels: ",
+    "저장된 픽셀 ",
+    "保存画素：",
+    "已保存像素：",
+    "Píxeles guardados: "
+  ],
+  "기본 고양이를 사용 중입니다.": [
+    "Using the default cat.",
+    "기본 고양이를 사용 중입니다.",
+    "標準の猫を使用中です。",
+    "正在使用默认小猫。",
+    "Se usa el gato predeterminado."
+  ],
+  "현재 설정을 불러왔습니다.": [
+    "Settings loaded.",
+    "현재 설정을 불러왔습니다.",
+    "設定を読み込みました。",
+    "设置已加载。",
+    "Ajustes cargados."
+  ],
+  "아이콘 선택을 저장했습니다.": [
+    "Icon choice saved.",
+    "아이콘 선택을 저장했습니다.",
+    "アイコン選択を保存しました。",
+    "图标选择已保存。",
+    "Selección de icono guardada."
+  ],
+  "표시 설정을 저장했습니다.": [
+    "Display settings saved.",
+    "표시 설정을 저장했습니다.",
+    "表示設定を保存しました。",
+    "显示设置已保存。",
+    "Ajustes de visualización guardados."
+  ],
+  "이미지는 가로·세로 512px 이하로 준비해주세요.": [
+    "Images must be at most 512px per side.",
+    "이미지는 가로·세로 512px 이하로 준비해주세요.",
+    "画像は縦横512px以下にしてください。",
+    "图片宽高不得超过512px。",
+    "Las imágenes deben tener como máximo 512px por lado."
+  ],
+  "아이콘이 완전히 투명합니다.": [
+    "The icon is completely transparent.",
+    "아이콘이 완전히 투명합니다.",
+    "アイコンが完全に透明です。",
+    "图标完全透明。",
+    "El icono es completamente transparente."
+  ],
+  "PNG 파일 형식을 확인해주세요.": [
+    "Check the PNG file format.",
+    "PNG 파일 형식을 확인해주세요.",
+    "PNG形式を確認してください。",
+    "请检查PNG文件格式。",
+    "Comprueba el formato PNG."
+  ],
+  "PNG는 가로·세로 512px 이하로 준비해주세요.": [
+    "PNGs must be at most 512px per side.",
+    "PNG는 가로·세로 512px 이하로 준비해주세요.",
+    "PNGは縦横512px以下にしてください。",
+    "PNG宽高不得超过512px。",
+    "Los PNG deben tener como máximo 512px por lado."
+  ],
+  "PNG·ICO 또는 GIF 파일을 선택해주세요.": [
+    "Choose PNG, ICO, or GIF files.",
+    "PNG·ICO 또는 GIF 파일을 선택해주세요.",
+    "PNG・ICO・GIFを選択してください。",
+    "请选择PNG、ICO或GIF文件。",
+    "Elige archivos PNG, ICO o GIF."
+  ],
+  "이 브라우저에서는 GIF 변환을 지원하지 않습니다. 크롬을 사용하거나 PNG 두 장으로 등록해주세요.": [
+    "This browser cannot convert GIFs. Use Chrome or upload PNG frames.",
+    "이 브라우저에서는 GIF 변환을 지원하지 않습니다. 크롬을 사용하거나 PNG 두 장으로 등록해주세요.",
+    "このブラウザーはGIF変換に非対応です。ChromeまたはPNGフレームを使ってください。",
+    "此浏览器不支持GIF转换，请使用Chrome或上传PNG帧。",
+    "Este navegador no convierte GIF. Usa Chrome o sube fotogramas PNG."
+  ],
+  "GIF 파일 형식을 확인해주세요.": [
+    "Check the GIF file format.",
+    "GIF 파일 형식을 확인해주세요.",
+    "GIF形式を確認してください。",
+    "请检查GIF文件格式。",
+    "Comprueba el formato GIF."
+  ],
+  "GIF는 가로·세로 512px 이하로 준비해주세요.": [
+    "GIFs must be at most 512px per side.",
+    "GIF는 가로·세로 512px 이하로 준비해주세요.",
+    "GIFは縦横512px以下にしてください。",
+    "GIF宽高不得超过512px。",
+    "Los GIF deben tener como máximo 512px por lado."
+  ],
+  "GIF 원본은 120프레임 이하로 준비해주세요.": [
+    "GIF source must have at most 120 frames.",
+    "GIF 원본은 120프레임 이하로 준비해주세요.",
+    "GIF原本は120フレーム以下にしてください。",
+    "GIF原始帧不得超过120。",
+    "El GIF original debe tener como máximo 120 fotogramas."
+  ],
+  "먼저 아이콘 파일을 선택해주세요.": [
+    "Choose icon files first.",
+    "먼저 아이콘 파일을 선택해주세요.",
+    "先にアイコンファイルを選択してください。",
+    "请先选择图标文件。",
+    "Elige primero los archivos de icono."
+  ],
+  "이미지는 최대 8장까지 등록할 수 있습니다.": [
+    "Upload at most eight images.",
+    "이미지는 최대 8장까지 등록할 수 있습니다.",
+    "画像は最大8枚です。",
+    "最多上传8张图片。",
+    "Sube como máximo ocho imágenes."
+  ],
+  "파일은 각각 1MB 이하로 준비해주세요.": [
+    "Each file must be at most 1MiB.",
+    "파일은 각각 1MB 이하로 준비해주세요.",
+    "各ファイルは1MiB以下にしてください。",
+    "每个文件不得超过1MiB。",
+    "Cada archivo debe tener como máximo 1MiB."
+  ],
+  "GIF는 한 개만 선택해주세요.": [
+    "Choose only one GIF.",
+    "GIF는 한 개만 선택해주세요.",
+    "GIFは1つだけ選択してください。",
+    "请选择一个GIF。",
+    "Elige solo un GIF."
+  ],
+  "프레임 간격은 150~2,000ms입니다.": [
+    "Frame interval must be 150–2,000ms.",
+    "프레임 간격은 150~2,000ms입니다.",
+    "フレーム間隔は150～2,000msです。",
+    "帧间隔必须为150–2,000ms。",
+    "El intervalo debe ser de 150 a 2.000ms."
+  ],
+  "작은 프레임으로 변환하고 있습니다.": [
+    "Converting to small frames.",
+    "작은 프레임으로 변환하고 있습니다.",
+    "小さいフレームに変換中です。",
+    "正在转换为小帧。",
+    "Convirtiendo a fotogramas pequeños."
+  ],
+  "프레임 · 32×32 · 픽셀 ": [
+    " frames · 32×32 · pixels ",
+    "프레임 · 32×32 · 픽셀 ",
+    "フレーム · 32×32 · 画素 ",
+    "帧 · 32×32 · 像素 ",
+    " fotogramas · 32×32 · píxeles "
+  ],
+  "미리보기를 확인한 뒤 적용하세요.": [
+    "Check the preview before applying.",
+    "미리보기를 확인한 뒤 적용하세요.",
+    "プレビューを確認してから適用してください。",
+    "检查预览后再应用。",
+    "Comprueba la vista previa antes de aplicar."
+  ],
+  "이 상태에 등록된 세트가 있습니다. 적용하면 이 세트만 교체합니다.": [
+    "A set exists for this state. Applying replaces only that set.",
+    "이 상태에 등록된 세트가 있습니다. 적용하면 이 세트만 교체합니다.",
+    "この状態には登録済みセットがあります。適用するとそのセットだけ置き換えます。",
+    "此状态已注册图片组，应用仅替换该组。",
+    "Este estado tiene un conjunto. Aplicar sustituye solo ese conjunto."
+  ],
+  "이 상태에 등록된 세트가 없습니다. 상태별 세트가 없으면 공통 세트, 공통도 없으면 기본 고양이를 표시합니다.": [
+    "No set for this state. It uses the shared set, or the default cat if none exists.",
+    "이 상태에 등록된 세트가 없습니다. 상태별 세트가 없으면 공통 세트, 공통도 없으면 기본 고양이를 표시합니다.",
+    "この状態のセットはありません。共通セット、なければ標準の猫を使います。",
+    "此状态未注册，使用共用组；共用组也没有时使用默认小猫。",
+    "No hay conjunto para este estado. Usa el común o, si no existe, el gato predeterminado."
+  ],
+  "선택한 상태의 모션 세트를 저장했습니다. 실제 해당 상태에서 표시됩니다.": [
+    "Saved the selected state's animation. It appears when that state is active.",
+    "선택한 상태의 모션 세트를 저장했습니다. 실제 해당 상태에서 표시됩니다.",
+    "選択した状態の動きを保存しました。その状態で表示します。",
+    "已保存所选状态动画，在该状态时显示。",
+    "Animación guardada para el estado. Se muestra cuando esté activo."
+  ],
+  "이번 실행 동안 펫을 숨겼습니다.": [
+    "Pet hidden for this run.",
+    "이번 실행 동안 펫을 숨겼습니다.",
+    "今回の起動中はペットを非表示にしました。",
+    "本次运行已隐藏宠物。",
+    "Mascota oculta durante esta ejecución."
+  ],
+  "감시 프로그램을 종료했습니다.": [
+    "Watcher stopped.",
+    "감시 프로그램을 종료했습니다.",
+    "監視プログラムを終了しました。",
+    "监视程序已停止。",
+    "Monitor detenido."
+  ],
+  "자동 감지로 돌아왔습니다.": [
+    "Returned to automatic detection.",
+    "자동 감지로 돌아왔습니다.",
+    "自動検出に戻りました。",
+    "已返回自动检测。",
+    "Se volvió a la detección automática."
+  ],
+  "적용했습니다.": [
+    "Applied.",
+    "적용했습니다.",
+    "適用しました。",
+    "已应用。",
+    "Aplicado."
+  ],
+  "설정 연결을 닫았습니다. 이 탭을 닫아도 됩니다.": [
+    "Connection closed. You can close this tab.",
+    "설정 연결을 닫았습니다. 이 탭을 닫아도 됩니다.",
+    "接続を閉じました。このタブを閉じて構いません。",
+    "连接已关闭，可以关闭此标签页。",
+    "Conexión cerrada. Puedes cerrar esta pestaña."
+  ],
+  "선택한 파일을 변환해주세요.": [
+    "Convert the selected files.",
+    "선택한 파일을 변환해주세요.",
+    "選択したファイルを変換してください。",
+    "请转换所选文件。",
+    "Convierte los archivos seleccionados."
+  ],
+  "언어 저장": [
+    "Save language",
+    "언어 저장",
+    "言語を保存",
+    "保存语言",
+    "Guardar idioma"
+  ],
+  "언어를 저장했습니다.": [
+    "Language saved.",
+    "언어를 저장했습니다.",
+    "言語を保存しました。",
+    "语言已保存。",
+    "Idioma guardado."
+  ],
+  "설정 메뉴·세션 창·브라우저에 적용하고 재실행해도 유지합니다.": [
+    "Applies to menus, sessions, and browser settings; saved across restarts.",
+    "설정 메뉴·세션 창·브라우저에 적용하고 재실행해도 유지합니다.",
+    "メニュー・セッション・ブラウザーに適用し、再起動後も維持します。",
+    "作用于菜单、会话和浏览器设置，重启后保留。",
+    "Se aplica a menús, sesiones y ajustes del navegador; se conserva al reiniciar."
+  ],
+  "Language could not be saved": [
+    "Language could not be saved",
+    "언어를 저장하지 못했습니다.",
+    "言語を保存できませんでした。",
+    "无法保存语言。",
+    "No se pudo guardar el idioma."
+  ],
+  "Settings could not be saved": [
+    "Settings could not be saved",
+    "설정을 저장하지 못했습니다.",
+    "設定を保存できませんでした。",
+    "无法保存设置。",
+    "No se pudieron guardar los ajustes."
+  ],
+  "Icon could not be saved": [
+    "Icon could not be saved",
+    "아이콘을 저장하지 못했습니다.",
+    "アイコンを保存できませんでした。",
+    "无法保存图标。",
+    "No se pudo guardar el icono."
+  ],
+  "Preview failed": [
+    "Preview failed",
+    "미리보기에 실패했습니다.",
+    "プレビューに失敗しました。",
+    "预览失败。",
+    "Falló la vista previa."
+  ],
+  "Settings page missing": [
+    "Settings page missing",
+    "설정 페이지 파일이 없습니다.",
+    "設定ページがありません。",
+    "缺少设置页面。",
+    "Falta la página de ajustes."
+  ],
+  "Localization missing": [
+    "Localization missing",
+    "번역 파일이 없습니다.",
+    "翻訳ファイルがありません。",
+    "缺少翻译文件。",
+    "Falta el archivo de traducciones."
+  ],
+  "Memory unavailable": [
+    "Memory unavailable",
+    "메모리를 확보하지 못했습니다.",
+    "メモリーを確保できません。",
+    "无法分配内存。",
+    "No se pudo asignar memoria."
+  ],
+  "Invalid icon state": [
+    "Invalid icon state",
+    "등록할 상태가 올바르지 않습니다.",
+    "登録する状態が不正です。",
+    "图标状态无效。",
+    "Estado de icono no válido."
+  ],
+  "No custom icon": [
+    "No custom icon",
+    "등록된 사용자 아이콘이 없습니다.",
+    "登録されたアイコンがありません。",
+    "没有自定义图标。",
+    "No hay icono personalizado."
+  ],
+  "Invalid saved animation": [
+    "Invalid saved animation",
+    "저장된 애니메이션이 올바르지 않습니다.",
+    "保存されたアニメーションが不正です。",
+    "保存的动画无效。",
+    "Animación guardada no válida."
+  ],
+  "Invalid state": [
+    "Invalid state",
+    "상태가 올바르지 않습니다.",
+    "状態が不正です。",
+    "状态无效。",
+    "Estado no válido."
+  ],
+  "Invalid action": [
+    "Invalid action",
+    "동작이 올바르지 않습니다.",
+    "操作が不正です。",
+    "操作无效。",
+    "Acción no válida."
+  ],
+  "Use 1-8 frames per state, 32x32 RGBA, 150-2000ms per frame": [
+    "Use 1-8 frames per state, 32x32 RGBA, 150-2000ms per frame",
+    "상태당 32×32 RGBA 1~8장, 간격 150~2,000ms를 사용하세요.",
+    "状態ごとに32×32 RGBAを1～8枚、150～2,000msにしてください。",
+    "每个状态使用1–8帧32×32 RGBA，间隔150–2,000ms。",
+    "Usa de 1 a 8 fotogramas RGBA de 32×32 por estado, de 150 a 2.000ms."
+  ]
+}

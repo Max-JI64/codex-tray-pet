@@ -95,20 +95,22 @@ static void clearBadgeIcons(void){int i;for(i=0;i<4;i++){if(badgeIcons[i])Destro
 static const DWORD badgeColors[]={0x2f3038,0xe5484d,0x2979ff,0x168b5b,0x8054d9,0xffffff};
 static void loadBadgeStyle(void){
     WCHAR path[1100];FILE *f;char text[64];int value;
-    badgeStyle=1;animation=1;customEnabled=0;_snwprintf(path,1100,L"%ls\\pet-settings.txt",folder);f=_wfopen(path,L"rb");if(!f)return;
+    badgeStyle=1;animation=1;customEnabled=0;uiLanguage=0;_snwprintf(path,1100,L"%ls\\pet-settings.txt",folder);f=_wfopen(path,L"rb");if(!f)return;
     while(fgets(text,sizeof(text),f)){if(sscanf(text,"badgeColor=%d",&value)==1&&value>=0&&value<6)badgeStyle=value;
         else if(sscanf(text,"animation=%d",&value)==1&&(value==0||value==1))animation=value;
-        else if(sscanf(text,"customIcon=%d",&value)==1&&(value==0||value==1))customEnabled=value;}
+        else if(sscanf(text,"customIcon=%d",&value)==1&&(value==0||value==1))customEnabled=value;
+        else if(sscanf(text,"language=%d",&value)==1&&value>=0&&value<5)uiLanguage=value;}
     fclose(f);
 }
 static int savePetPreferences(int value,int moving,int custom){
     WCHAR path[1100],temporary[1100];FILE *f;int ok;
     if(value<0||value>=6||moving<0||moving>1||custom<0||custom>1)return 0;
     _snwprintf(path,1100,L"%ls\\pet-settings.txt",folder);_snwprintf(temporary,1100,L"%ls\\pet-settings.tmp",folder);
-    f=_wfopen(temporary,L"wb");if(!f)return 0;ok=fprintf(f,"badgeColor=%d\nanimation=%d\ncustomIcon=%d\n",value,moving,custom)>0;if(fclose(f))ok=0;
+    f=_wfopen(temporary,L"wb");if(!f)return 0;ok=fprintf(f,"badgeColor=%d\nanimation=%d\ncustomIcon=%d\nlanguage=%d\n",value,moving,custom,uiLanguage)>0;if(fclose(f))ok=0;
     if(!ok||!MoveFileExW(temporary,path,MOVEFILE_REPLACE_EXISTING)){DeleteFileW(temporary);return 0;}
     return 1;
 }
+static int setUiLanguage(int value){int old=uiLanguage;if(value<0||value>=5)return 0;uiLanguage=value;if(!savePetPreferences(badgeStyle,animation,customEnabled)){uiLanguage=old;return 0;}return 1;}
 static int setBadgeStyle(int value){if(!savePetPreferences(value,animation,customEnabled))return 0;if(badgeStyle!=value){badgeStyle=value;clearBadgeIcons();}return 1;}
 static BYTE badgeNumberMask[256];static int badgeNumberKey=-1;
 /* Rasterize only on cache changes, then keep a 256-byte grayscale mask. */

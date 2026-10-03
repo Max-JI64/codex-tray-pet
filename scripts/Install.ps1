@@ -2,6 +2,7 @@ param([switch]$ValidateOnly)
 $ErrorActionPreference='Stop'
 $exe=Join-Path $PSScriptRoot 'CodexPetLite.exe'
 if(-not (Test-Path -LiteralPath $exe)){throw 'CodexPetLite.exe not found. Extract the complete release ZIP.'}
+foreach($resource in @('settings.html','localization.js')){if(-not (Test-Path -LiteralPath (Join-Path $PSScriptRoot $resource))){throw ('Missing '+$resource+'. Extract the complete release ZIP.')}}
 $taskName='Codex Status Pet Lite'
 $existing=Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
 if($existing -and @($existing.Actions | Where-Object {-not [String]::Equals($_.Execute,$exe,[StringComparison]::OrdinalIgnoreCase)}).Count){throw 'A pet is registered in a different folder. Uninstall that copy first.'}

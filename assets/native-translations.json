@@ -1,0 +1,324 @@
+{
+  "idle": [
+    "Idle",
+    "대기중",
+    "待機中",
+    "空闲",
+    "En espera"
+  ],
+  "working": [
+    "Working",
+    "작업중",
+    "作業中",
+    "工作中",
+    "Trabajando"
+  ],
+  "done": [
+    "Completed",
+    "작업완료",
+    "完了",
+    "已完成",
+    "Completado"
+  ],
+  "question": [
+    "Question",
+    "질문있음",
+    "質問あり",
+    "有问题",
+    "Pregunta"
+  ],
+  "error": [
+    "Error",
+    "오류",
+    "エラー",
+    "错误",
+    "Error"
+  ],
+  "stopped": [
+    "Stopped",
+    "중지",
+    "停止",
+    "已停止",
+    "Detenido"
+  ],
+  "unknown": [
+    "Detection uncertain",
+    "감지확인 필요",
+    "検出の確認が必要",
+    "检测待确认",
+    "Detección incierta"
+  ],
+  "app": [
+    "Codex Tray Pet",
+    "Codex 펫",
+    "Codex トレイペット",
+    "Codex 托盘宠物",
+    "Codex Tray Pet"
+  ],
+  "quota": [
+    "Usage limit reached",
+    "사용량 제한으로 중지",
+    "使用量制限で停止",
+    "已达用量限制",
+    "Límite de uso alcanzado"
+  ],
+  "previewSuffix": [
+    " · Preview",
+    " · 미리보기",
+    " · プレビュー",
+    " · 预览",
+    " · Vista previa"
+  ],
+  "longSuffix": [
+    " · Task over 10 min",
+    " · 10분 이상 작업 있음",
+    " · 10分以上の作業",
+    " · 有任务超过10分钟",
+    " · Tarea de más de 10 min"
+  ],
+  "tooltip": [
+    "Codex Pet · %ls%ls · Unread %d%ls",
+    "Codex 펫 · %ls%ls · 미확인 완료 %d개%ls",
+    "Codex ペット · %ls%ls · 未読 %d%ls",
+    "Codex 宠物 · %ls%ls · 未读 %d%ls",
+    "Codex Pet · %ls%ls · Sin leer %d%ls"
+  ],
+  "status": [
+    "Status: %ls",
+    "상태: %ls",
+    "状態: %ls",
+    "状态：%ls",
+    "Estado: %ls"
+  ],
+  "auto": [
+    "Automatic detection",
+    "자동 감지",
+    "自動検出",
+    "自动检测",
+    "Detección automática"
+  ],
+  "ack": [
+    "Acknowledge completed / error / stopped",
+    "완료·오류·중지 확인",
+    "完了・エラー・停止を確認",
+    "确认完成、错误和停止",
+    "Confirmar completado / error / detenido"
+  ],
+  "preview": [
+    "State preview",
+    "상태 미리보기",
+    "状態プレビュー",
+    "状态预览",
+    "Vista previa del estado"
+  ],
+  "quotaPreview": [
+    "Usage-limit alert",
+    "사용량 제한 경고",
+    "使用量制限の警告",
+    "用量限制警告",
+    "Aviso de límite de uso"
+  ],
+  "longPreview": [
+    "Task over 10 minutes",
+    "10분 이상 작업",
+    "10分以上の作業",
+    "超过10分钟的任务",
+    "Tarea de más de 10 minutos"
+  ],
+  "unreadPreview": [
+    "Unread-result counter",
+    "미확인 완료 숫자",
+    "未読結果の件数",
+    "未读结果数量",
+    "Contador de resultados sin leer"
+  ],
+  "ackQuota": [
+    "Acknowledge usage-limit alert",
+    "사용량 제한 알림 확인",
+    "使用量制限の通知を確認",
+    "确认用量限制提示",
+    "Confirmar aviso de límite de uso"
+  ],
+  "badgeMenu": [
+    "Counter color",
+    "숫자 배지 색상",
+    "件数バッジの色",
+    "数量徽标颜色",
+    "Color del contador"
+  ],
+  "animate": [
+    "Animation and color changes",
+    "움직임·색 변화",
+    "動き・色の変化",
+    "动画与颜色变化",
+    "Animación y cambios de color"
+  ],
+  "changeIcon": [
+    "Change icon...",
+    "아이콘 변경...",
+    "アイコンを変更...",
+    "更换图标...",
+    "Cambiar icono..."
+  ],
+  "browserSettings": [
+    "Open settings in browser...",
+    "브라우저에서 설정 열기...",
+    "ブラウザーで設定を開く...",
+    "在浏览器中打开设置...",
+    "Abrir ajustes en el navegador..."
+  ],
+  "hide": [
+    "Hide pet for this Codex run",
+    "이번 코덱스 실행 동안 펫 숨기기",
+    "今回のCodex起動中は非表示",
+    "本次Codex运行期间隐藏宠物",
+    "Ocultar durante esta ejecución de Codex"
+  ],
+  "exit": [
+    "Stop watcher",
+    "감시 프로그램 종료",
+    "監視プログラムを終了",
+    "退出监视程序",
+    "Detener monitor"
+  ],
+  "charcoal": [
+    "Charcoal",
+    "차콜",
+    "チャコール",
+    "炭灰",
+    "Carbón"
+  ],
+  "red": [
+    "Red · default",
+    "빨강 · 기본값",
+    "赤・初期値",
+    "红色 · 默认",
+    "Rojo · predeterminado"
+  ],
+  "blue": [
+    "Blue",
+    "파랑",
+    "青",
+    "蓝色",
+    "Azul"
+  ],
+  "green": [
+    "Green",
+    "초록",
+    "緑",
+    "绿色",
+    "Verde"
+  ],
+  "purple": [
+    "Purple",
+    "보라",
+    "紫",
+    "紫色",
+    "Morado"
+  ],
+  "white": [
+    "White",
+    "흰색",
+    "白",
+    "白色",
+    "Blanco"
+  ],
+  "language": [
+    "Language",
+    "언어",
+    "言語",
+    "语言",
+    "Idioma"
+  ],
+  "saveFailed": [
+    "Could not save settings.",
+    "설정을 저장하지 못했습니다.",
+    "設定を保存できませんでした。",
+    "无法保存设置。",
+    "No se pudieron guardar los ajustes."
+  ],
+  "sessions": [
+    "Sessions",
+    "세션",
+    "セッション",
+    "会话",
+    "Sesiones"
+  ],
+  "settings": [
+    "Settings",
+    "설정",
+    "設定",
+    "设置",
+    "Ajustes"
+  ],
+  "noSessions": [
+    "No sessions to display.",
+    "표시할 세션이 없습니다.",
+    "表示するセッションはありません。",
+    "没有可显示的会话。",
+    "No hay sesiones para mostrar."
+  ],
+  "loadingTitle": [
+    "Loading title",
+    "제목 확인 중",
+    "タイトルを確認中",
+    "正在读取标题",
+    "Cargando título"
+  ],
+  "readFailed": [
+    "Could not sync read state.",
+    "읽음 상태를 동기화할 수 없습니다.",
+    "既読状態を同期できません。",
+    "无法同步已读状态。",
+    "No se pudo sincronizar el estado de lectura."
+  ],
+  "scroll": [
+    "%d–%d / %d · Scroll to see more",
+    "%d–%d / %d · 휠로 보기",
+    "%d–%d / %d · スクロールで表示",
+    "%d–%d / %d · 滚动查看",
+    "%d–%d / %d · Desplázate para ver más"
+  ],
+  "sessionWindow": [
+    "Codex sessions",
+    "코덱스 세션",
+    "Codex セッション",
+    "Codex 会话",
+    "Sesiones de Codex"
+  ],
+  "projectWindow": [
+    "Codex project",
+    "코덱스 프로젝트",
+    "Codex プロジェクト",
+    "Codex 项目",
+    "Proyecto de Codex"
+  ],
+  "launchLinkFailed": [
+    "Could not launch the Codex session link.",
+    "Codex 세션 링크를 실행할 수 없습니다.",
+    "Codexのセッションリンクを実行できません。",
+    "无法启动Codex会话链接。",
+    "No se pudo abrir el enlace de la sesión de Codex."
+  ],
+  "openLinkFailed": [
+    "Could not open the session. Check Codex's URL association.",
+    "Codex 세션 링크를 열 수 없습니다. Codex 앱의 URL 연결을 확인해 주세요.",
+    "セッションを開けません。CodexのURL関連付けを確認してください。",
+    "无法打开会话。请检查Codex的URL关联。",
+    "No se pudo abrir la sesión. Comprueba la asociación de URL de Codex."
+  ],
+  "browserFailed": [
+    "Could not open browser settings.",
+    "브라우저 설정을 열지 못했습니다.",
+    "ブラウザー設定を開けませんでした。",
+    "无法打开浏览器设置。",
+    "No se pudieron abrir los ajustes del navegador."
+  ],
+  "launchBrowserFailed": [
+    "Could not start the browser.",
+    "브라우저를 실행하지 못했습니다.",
+    "ブラウザーを起動できませんでした。",
+    "无法启动浏览器。",
+    "No se pudo iniciar el navegador."
+  ]
+}

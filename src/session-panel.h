@@ -176,13 +176,13 @@ static void openPanelSession(int row) {
     /* Windows URI activation loads COM DLLs; release them with a click-only process. */
     if(CreateProcessW(executable,command,NULL,NULL,FALSE,CREATE_NO_WINDOW,NULL,folder,&startup,&child)) {
         CloseHandle(child.hThread);navigationHelper=child.hProcess;
-    } else MessageBoxW(window,L"Codex 세션 링크를 실행할 수 없습니다.",L"코덱스 펫",MB_OK|MB_ICONERROR);
+    } else MessageBoxW(window,tr(TXT_launchLinkFailed),tr(TXT_app),MB_OK|MB_ICONERROR);
     report();
 }
 static void pollNavigation(void) {
     DWORD result;if(!navigationHelper||WaitForSingleObject(navigationHelper,0)!=WAIT_OBJECT_0)return;
     if(!GetExitCodeProcess(navigationHelper,&result))result=0;CloseHandle(navigationHelper);navigationHelper=NULL;lastNavigationResult=result;
-    if(result<=32)MessageBoxW(window,L"Codex 세션 링크를 열 수 없습니다. Codex 앱의 URL 연결을 확인해 주세요.",L"코덱스 펫",MB_OK|MB_ICONERROR);
+    if(result<=32)MessageBoxW(window,tr(TXT_openLinkFailed),tr(TXT_app),MB_OK|MB_ICONERROR);
 }
 static void roundPanel(HWND h) {
     typedef HRESULT(WINAPI *AttributeFn)(HWND,DWORD,LPCVOID,DWORD);HMODULE lib=LoadLibraryW(L"dwmapi.dll");int rounded=2;COLORREF border=RGB(218,218,218);
@@ -206,7 +206,7 @@ static void showProjectTip(int row) {
     wc.style=CS_DROPSHADOW;wc.lpfnWndProc=projectTipProc;wc.hInstance=GetModuleHandleW(NULL);wc.lpszClassName=L"CodexPetProjectTip";wc.hCursor=LoadCursor(NULL,IDC_ARROW);RegisterClassW(&wc);
     GetWindowRect(panel,&parent);info.cbSize=sizeof(info);GetMonitorInfoW(MonitorFromWindow(panel,MONITOR_DEFAULTTONEAREST),&info);x=projectTipX(&parent,&info.rcWork,width);
     anchor.x=0;anchor.y=px(panelHeaderHeight+(row-panelOffset)*panelRowHeight);ClientToScreen(panel,&anchor);y=anchor.y;if(y+height>info.rcWork.bottom)y=info.rcWork.bottom-height;if(y<info.rcWork.top)y=info.rcWork.top;
-    projectTip=CreateWindowExW(WS_EX_TOOLWINDOW|WS_EX_TOPMOST|WS_EX_NOACTIVATE,wc.lpszClassName,L"코덱스 프로젝트",WS_POPUP|WS_BORDER,x,y,width,height,panel,NULL,wc.hInstance,NULL);
+    projectTip=CreateWindowExW(WS_EX_TOOLWINDOW|WS_EX_TOPMOST|WS_EX_NOACTIVATE,wc.lpszClassName,tr(TXT_projectWindow),WS_POPUP|WS_BORDER,x,y,width,height,panel,NULL,wc.hInstance,NULL);
     if(projectTip){roundPanel(projectTip);ShowWindow(projectTip,SW_SHOWNOACTIVATE);}
 }
 static void elapsedText(LONGLONG started,LONGLONG now,WCHAR out[40]) {
@@ -219,15 +219,15 @@ static void repaintPanel(void){if(panel){RECT r;int height=panelHeight();GetWind
 static void drawPanel(HDC dc,RECT bounds) {
     RECT r;HBRUSH background=CreateSolidBrush(RGB(249,249,249));HPEN line=CreatePen(PS_SOLID,1,RGB(218,218,218));HGDIOBJ oldPen,oldFont;int row,y;
     r=bounds;FillRect(dc,&r,background);DeleteObject(background);SetBkMode(dc,OPAQUE);SetBkColor(dc,RGB(249,249,249));
-    oldFont=SelectObject(dc,headerFont);SetTextColor(dc,RGB(24,24,24));r.left=px(12);r.top=px(4);r.right=px(200);r.bottom=px(panelHeaderHeight-4);DrawTextW(dc,L"세션",-1,&r,DT_SINGLELINE|DT_VCENTER);
-    r.left=px(216);r.right=px(268);DrawTextW(dc,L"설정",-1,&r,DT_SINGLELINE|DT_VCENTER|DT_CENTER);
+    oldFont=SelectObject(dc,headerFont);SetTextColor(dc,RGB(24,24,24));r.left=px(12);r.top=px(4);r.right=px(200);r.bottom=px(panelHeaderHeight-4);DrawTextW(dc,tr(TXT_sessions),-1,&r,DT_SINGLELINE|DT_VCENTER);
+    r.left=px(200);r.right=px(268);DrawTextW(dc,tr(TXT_settings),-1,&r,DT_SINGLELINE|DT_VCENTER|DT_CENTER);
     SelectObject(dc,panelFont);oldPen=SelectObject(dc,line);MoveToEx(dc,px(8),px(panelHeaderHeight-2),NULL);LineTo(dc,px(272),px(panelHeaderHeight-2));
-    if(!panelCount){r.left=px(12);r.top=px(panelHeaderHeight);r.right=px(268);r.bottom=px(panelHeaderHeight+panelRowHeight);SetTextColor(dc,GetSysColor(COLOR_GRAYTEXT));DrawTextW(dc,L"표시할 세션이 없습니다.",-1,&r,DT_SINGLELINE|DT_VCENTER);}
+    if(!panelCount){r.left=px(12);r.top=px(panelHeaderHeight);r.right=px(268);r.bottom=px(panelHeaderHeight+panelRowHeight);SetTextColor(dc,GetSysColor(COLOR_GRAYTEXT));DrawTextW(dc,tr(TXT_noSessions),-1,&r,DT_SINGLELINE|DT_VCENTER);}
     for(row=panelOffset;row<panelCount&&row<panelOffset+panelPage;row++) {
         Chat *c=&chats[panelRows[row]];WCHAR elapsed[40];y=px(panelHeaderHeight+(row-panelOffset)*panelRowHeight);
         if(row==panelHover){HBRUSH hover=CreateSolidBrush(RGB(235,235,235));r.left=px(6);r.top=y;r.right=px(274);r.bottom=y+px(panelRowHeight);FillRect(dc,&r,hover);DeleteObject(hover);SetBkColor(dc,RGB(235,235,235));}else SetBkColor(dc,RGB(249,249,249));
         r.left=px(12);r.top=y;r.right=px(188);r.bottom=y+px(panelRowHeight);SetTextColor(dc,RGB(24,24,24));
-        DrawTextW(dc,c->title[0]?c->title:L"제목 확인 중",-1,&r,DT_SINGLELINE|DT_VCENTER|DT_END_ELLIPSIS|DT_NOPREFIX);
+        DrawTextW(dc,c->title[0]?c->title:tr(TXT_loadingTitle),-1,&r,DT_SINGLELINE|DT_VCENTER|DT_END_ELLIPSIS|DT_NOPREFIX);
         if(c->quotaBlocked){int side=px(13),left=px(252),top=y+(px(panelRowHeight)-side)/2;HPEN warning=CreatePen(PS_SOLID,px(1),RGB(235,99,91));HGDIOBJ priorPen=SelectObject(dc,warning),priorBrush=SelectObject(dc,GetStockObject(NULL_BRUSH));
             Ellipse(dc,left,top,left+side,top+side);SelectObject(dc,priorBrush);SelectObject(dc,priorPen);DeleteObject(warning);
             r.left=left;r.right=left+side;r.top=top-px(1);r.bottom=top+side;SetTextColor(dc,RGB(235,99,91));SetBkMode(dc,TRANSPARENT);DrawTextW(dc,L"i",-1,&r,DT_SINGLELINE|DT_CENTER|DT_VCENTER|DT_NOPREFIX);SetBkMode(dc,OPAQUE);
@@ -239,8 +239,8 @@ static void drawPanel(HDC dc,RECT bounds) {
         else {int dotY=y+(px(panelRowHeight)-px(8))/2;HBRUSH dot=CreateSolidBrush(RGB(52,132,255));HGDIOBJ oldBrush=SelectObject(dc,dot),dotPen=SelectObject(dc,GetStockObject(NULL_PEN));Ellipse(dc,px(257),dotY,px(265),dotY+px(8));SelectObject(dc,dotPen);SelectObject(dc,oldBrush);DeleteObject(dot);}
     }
     SetBkColor(dc,RGB(249,249,249));r=bounds;r.left=px(12);r.top=r.bottom-px(12);r.right-=px(12);SetTextColor(dc,GetSysColor(COLOR_GRAYTEXT));
-    if(!readStateOk)DrawTextW(dc,L"읽음 상태를 동기화할 수 없습니다.",-1,&r,DT_SINGLELINE|DT_VCENTER);
-    else if(panelCount>panelPage){WCHAR count[80];_snwprintf(count,80,L"%d–%d / %d  ·  휠로 보기",panelOffset+1,panelOffset+panelPage<panelCount?panelOffset+panelPage:panelCount,panelCount);DrawTextW(dc,count,-1,&r,DT_SINGLELINE|DT_VCENTER);}
+    if(!readStateOk)DrawTextW(dc,tr(TXT_readFailed),-1,&r,DT_SINGLELINE|DT_VCENTER);
+    else if(panelCount>panelPage){WCHAR count[80];_snwprintf(count,80,tr(TXT_scroll),panelOffset+1,panelOffset+panelPage<panelCount?panelOffset+panelPage:panelCount,panelCount);DrawTextW(dc,count,-1,&r,DT_SINGLELINE|DT_VCENTER);}
     SelectObject(dc,oldFont);SelectObject(dc,oldPen);DeleteObject(line);
 }
 static void paintPanel(HWND h) {PAINTSTRUCT ps;RECT bounds;HDC dc=BeginPaint(h,&ps);GetClientRect(h,&bounds);drawPanel(dc,bounds);EndPaint(h,&ps);}
@@ -248,7 +248,7 @@ static LRESULT CALLBACK panelProc(HWND h,UINT msg,WPARAM w,LPARAM l) {
     if(msg==WM_PAINT){paintPanel(h);return 0;}
     if(msg==WM_ERASEBKGND)return 1;
     if(msg==WM_TIMER){repaintPanel();return 0;}
-    if(msg==WM_LBUTTONUP){int x=(short)LOWORD(l),y=(short)HIWORD(l);if(x>=px(216)&&x<px(268)&&y>=px(4)&&y<px(panelHeaderHeight-4))menu();else openPanelSession(panelRowAt(x,y));return 0;}
+    if(msg==WM_LBUTTONUP){int x=(short)LOWORD(l),y=(short)HIWORD(l);if(x>=px(200)&&x<px(268)&&y>=px(4)&&y<px(panelHeaderHeight-4))menu();else openPanelSession(panelRowAt(x,y));return 0;}
     if(msg==WM_MOUSEMOVE){int hit=panelRowAt((short)LOWORD(l),(short)HIWORD(l));TRACKMOUSEEVENT track={sizeof(track),TME_LEAVE,h,0};TrackMouseEvent(&track);if(hit!=panelHover){panelHover=hit;showProjectTip(hit);InvalidateRect(h,NULL,FALSE);}SetCursor(LoadCursor(NULL,hit>=0?IDC_HAND:IDC_ARROW));return 0;}
     if(msg==WM_MOUSELEAVE){hideProjectTip();panelHover=-1;InvalidateRect(h,NULL,FALSE);return 0;}
     if(msg==WM_KEYDOWN&&w==VK_F10){menu();return 0;}
@@ -268,7 +268,7 @@ static void togglePanel(void) {
     memset(&wc,0,sizeof(wc));wc.style=CS_DROPSHADOW;wc.lpfnWndProc=panelProc;wc.hInstance=GetModuleHandleW(NULL);wc.lpszClassName=L"CodexPetSessionPanel";wc.hCursor=LoadCursor(NULL,IDC_ARROW);RegisterClassW(&wc);
     height=panelHeight();monitor=MonitorFromPoint(pt,MONITOR_DEFAULTTONEAREST);info.cbSize=sizeof(info);GetMonitorInfoW(monitor,&info);
     x=pt.x-px(280);y=pt.y-height-px(10);if(x<info.rcWork.left)x=info.rcWork.left;if(x+px(280)>info.rcWork.right)x=info.rcWork.right-px(280);if(y<info.rcWork.top)y=info.rcWork.top;
-    panel=CreateWindowExW(WS_EX_TOOLWINDOW|WS_EX_TOPMOST,wc.lpszClassName,L"코덱스 세션",WS_POPUP|WS_BORDER,x,y,px(280),height,window,NULL,wc.hInstance,NULL);
+    panel=CreateWindowExW(WS_EX_TOOLWINDOW|WS_EX_TOPMOST,wc.lpszClassName,tr(TXT_sessionWindow),WS_POPUP|WS_BORDER,x,y,px(280),height,window,NULL,wc.hInstance,NULL);
     if(!panel){DeleteObject(panelFont);DeleteObject(headerFont);panelFont=headerFont=NULL;return;}
     roundPanel(panel);
     ShowWindow(panel,SW_SHOWNORMAL);SetForegroundWindow(panel);SetTimer(panel,3,1000,NULL);

@@ -59,7 +59,7 @@ static DWORD scanTick;
 static int failure;
 static unsigned long recordsRead;
 static LONGLONG desktopStartedAt;
-static const WCHAR *names[]={L"대기중",L"작업중",L"작업완료",L"질문있음",L"오류",L"중지",L"감지확인 필요"};
+#include "language.h"
 static WCHAR codexHome[1024];
 static HWND panel;
 static HFONT panelFont,headerFont;
@@ -344,12 +344,12 @@ static void destroyIcons(void) { int m,f; for(m=0;m<7;m++) for(f=0;f<2;f++) {if(
 static void report(void) {
     WCHAR path[1100]; FILE *file; int allowed=0,i; for(i=0;i<chatCount;i++) allowed+=chats[i].allowed!=0;
     _snwprintf(path,1100,L"%ls\\lite-status.json",folder); file=_wfopen(path,L"wb"); if(!file) return;
-    fprintf(file,"{\"pid\":%lu,\"desktopPid\":%lu,\"tray\":%s,\"state\":%d,\"chats\":%d,\"failure\":%d,\"recordBufferBytes\":%d,\"iconFrames\":%d,\"recordsRead\":%lu,\"tick\":%lu,\"navigationId\":\"%s\",\"navigationResult\":%lld,\"navigationPending\":%s,\"motion\":%d,\"finishedUnread\":%d,\"longWorkCount\":%d,\"badgeFrames\":%d,\"quotaDbOk\":%s,\"quotaLogAt\":%lld,\"badgeColor\":%d,\"customIcon\":%d,\"customFrames\":%d,\"customCacheFrames\":%d,\"settingsPort\":%d}",GetCurrentProcessId(),desktopPid,iconsAdded?"true":"false",motion==1?STOPPED:manual>=0?manual:mood,allowed,failure,LINE_CAP,iconsAdded?22:0,recordsRead,GetTickCount(),lastNavigationId,(LONGLONG)lastNavigationResult,navigationHelper?"true":"false",motion,finishedUnread,longWorkCount,badgeFrames,quotaDbOk?"true":"false",quotaLogAt,badgeStyle,customEnabled,customCount,customCacheCount,webPort); fclose(file);
+    fprintf(file,"{\"pid\":%lu,\"desktopPid\":%lu,\"tray\":%s,\"state\":%d,\"chats\":%d,\"failure\":%d,\"recordBufferBytes\":%d,\"iconFrames\":%d,\"recordsRead\":%lu,\"tick\":%lu,\"navigationId\":\"%s\",\"navigationResult\":%lld,\"navigationPending\":%s,\"motion\":%d,\"finishedUnread\":%d,\"longWorkCount\":%d,\"badgeFrames\":%d,\"quotaDbOk\":%s,\"quotaLogAt\":%lld,\"badgeColor\":%d,\"customIcon\":%d,\"customFrames\":%d,\"customCacheFrames\":%d,\"settingsPort\":%d,\"language\":%d}",GetCurrentProcessId(),desktopPid,iconsAdded?"true":"false",motion==1?STOPPED:manual>=0?manual:mood,allowed,failure,LINE_CAP,iconsAdded?22:0,recordsRead,GetTickCount(),lastNavigationId,(LONGLONG)lastNavigationResult,navigationHelper?"true":"false",motion,finishedUnread,longWorkCount,badgeFrames,quotaDbOk?"true":"false",quotaLogAt,badgeStyle,customEnabled,customCount,customCacheCount,webPort,uiLanguage); fclose(file);
 }
 static void refresh(int add) {
     int shown=manual>=0?manual:mood;
     tray.uFlags=NIF_ICON|NIF_TIP|NIF_MESSAGE; tray.hIcon=displayIcon(shown);
-    _snwprintf(tray.szTip,128,L"Codex 펫 · %ls%ls · 미확인 완료 %d개%ls",motion==1?L"사용량 제한으로 중지":names[shown],manual>=0||manualMotion>=0?L" · 미리보기":L"",finishedUnread,longWorkCount?L" · 10분 이상 작업 있음":L"");
+    _snwprintf(tray.szTip,128,tr(TXT_tooltip),motion==1?tr(TXT_quota):stateName(shown),manual>=0||manualMotion>=0?tr(TXT_previewSuffix):L"",finishedUnread,longWorkCount?tr(TXT_longSuffix):L"");
     if(add) iconsAdded=Shell_NotifyIconW(NIM_ADD,&tray)!=0;
     else if(iconsAdded && !Shell_NotifyIconW(NIM_MODIFY,&tray)) iconsAdded=0;
 }
@@ -387,24 +387,26 @@ static void scan(void) {
     refresh(0);
 }
 static void menu(void) {
-    HMENU root=CreatePopupMenu(),preview=CreatePopupMenu(),colors=CreatePopupMenu(); POINT pt; int i,choice; WCHAR title[80];
-    const WCHAR *colorNames[]={L"차콜 (&A)",L"빨강 · 기본값 (&R)",L"파랑 (&B)",L"초록 (&G)",L"보라 (&P)",L"흰색 (&W)"};
-    _snwprintf(title,80,L"상태: %ls",motion==1?L"사용량 제한으로 중지":names[manual>=0?manual:mood]); AppendMenuW(root,MF_STRING|MF_GRAYED,0,title);
-    AppendMenuW(root,MF_STRING,10,L"자동 감지"); AppendMenuW(root,MF_STRING,11,L"완료·오류·중지 확인");
-    for(i=0;i<7;i++) AppendMenuW(preview,MF_STRING,30+i,names[i]); AppendMenuW(root,MF_POPUP,(UINT_PTR)preview,L"상태 미리보기");
-    AppendMenuW(preview,MF_SEPARATOR,0,NULL);AppendMenuW(preview,MF_STRING,70,L"사용량 제한 경고");AppendMenuW(preview,MF_STRING,71,L"10분 이상 작업");AppendMenuW(preview,MF_STRING,72,L"미확인 완료 숫자");
-    AppendMenuW(root,MF_STRING,15,L"사용량 제한 알림 확인");
-    for(i=0;i<6;i++)AppendMenuW(colors,MF_STRING|(i==badgeStyle?MF_CHECKED:0),80+i,colorNames[i]);
-    AppendMenuW(root,MF_POPUP,(UINT_PTR)colors,L"숫자 배지 색상 (&C)");
-    AppendMenuW(root,MF_STRING|(animation?MF_CHECKED:0),12,L"움직임·색 변화");
-    AppendMenuW(root,MF_STRING,16,L"아이콘 변경... (&I)");
-    AppendMenuW(root,MF_STRING,17,L"브라우저에서 설정 열기... (&S)");
-    AppendMenuW(root,MF_SEPARATOR,0,NULL); AppendMenuW(root,MF_STRING,13,L"이번 코덱스 실행 동안 펫 숨기기"); AppendMenuW(root,MF_STRING,14,L"감시 프로그램 종료");
+    HMENU root=CreatePopupMenu(),preview=CreatePopupMenu(),colors=CreatePopupMenu(),languages=CreatePopupMenu(); POINT pt; int i,choice; WCHAR title[80];
+    const int colorKeys[]={TXT_charcoal,TXT_red,TXT_blue,TXT_green,TXT_purple,TXT_white};
+    for(i=0;i<5;i++)AppendMenuW(languages,MF_STRING|(i==uiLanguage?MF_CHECKED:0),100+i,languageNames[i]);AppendMenuW(root,MF_POPUP,(UINT_PTR)languages,tr(TXT_language));AppendMenuW(root,MF_SEPARATOR,0,NULL);
+    _snwprintf(title,80,tr(TXT_status),motion==1?tr(TXT_quota):stateName(manual>=0?manual:mood)); AppendMenuW(root,MF_STRING|MF_GRAYED,0,title);
+    AppendMenuW(root,MF_STRING,10,tr(TXT_auto)); AppendMenuW(root,MF_STRING,11,tr(TXT_ack));
+    for(i=0;i<7;i++) AppendMenuW(preview,MF_STRING,30+i,stateName(i)); AppendMenuW(root,MF_POPUP,(UINT_PTR)preview,tr(TXT_preview));
+    AppendMenuW(preview,MF_SEPARATOR,0,NULL);AppendMenuW(preview,MF_STRING,70,tr(TXT_quotaPreview));AppendMenuW(preview,MF_STRING,71,tr(TXT_longPreview));AppendMenuW(preview,MF_STRING,72,tr(TXT_unreadPreview));
+    AppendMenuW(root,MF_STRING,15,tr(TXT_ackQuota));
+    for(i=0;i<6;i++)AppendMenuW(colors,MF_STRING|(i==badgeStyle?MF_CHECKED:0),80+i,tr(colorKeys[i]));
+    AppendMenuW(root,MF_POPUP,(UINT_PTR)colors,tr(TXT_badgeMenu));
+    AppendMenuW(root,MF_STRING|(animation?MF_CHECKED:0),12,tr(TXT_animate));
+    AppendMenuW(root,MF_STRING,16,tr(TXT_changeIcon));
+    AppendMenuW(root,MF_STRING,17,tr(TXT_browserSettings));
+    AppendMenuW(root,MF_SEPARATOR,0,NULL); AppendMenuW(root,MF_STRING,13,tr(TXT_hide)); AppendMenuW(root,MF_STRING,14,tr(TXT_exit));
     GetCursorPos(&pt); settingsOpen=1; SetForegroundWindow(panel?panel:window); choice=TrackPopupMenu(root,TPM_RETURNCMD|TPM_RIGHTBUTTON,pt.x,pt.y,0,panel?panel:window,NULL); settingsOpen=0; DestroyMenu(root);
     applyCommand(choice);
 }
 static void applyCommand(int choice){int i;
-    if(choice==10) manual=manualMotion=-1;
+    if(choice>=100&&choice<105){if(!setUiLanguage(choice-100))MessageBoxW(panel?panel:window,tr(TXT_saveFailed),tr(TXT_app),MB_OK|MB_ICONERROR);}
+    else if(choice==10) manual=manualMotion=-1;
     else if(choice==11) {for(i=0;i<chatCount;i++) {chats[i].ready=0;if(chats[i].mood==DONE||chats[i].mood==ERROR_STATE||chats[i].mood==STOPPED)chats[i].mood=IDLE;}manual=-1;mood=aggregate(chats,chatCount,overflow);}
     else if(choice==12) {if(savePetPreferences(badgeStyle,!animation,customEnabled))animation=!animation;}
     else if(choice==16||choice==17){openBrowserSettings(choice==16);return;}
@@ -413,7 +415,7 @@ static void applyCommand(int choice){int i;
     else if(choice==14) {DestroyWindow(window);return;}
     else if(choice>=30 && choice<37){manual=choice-30;manualMotion=-1;}
     else if(choice>=70&&choice<=72){manual=WORK;manualMotion=choice==70?1:choice==71?2:3;}
-    else if(choice>=80&&choice<86){if(!setBadgeStyle(choice-80))MessageBoxW(panel?panel:window,L"배지 색상을 저장하지 못했습니다.",L"Codex 펫",MB_OK|MB_ICONERROR);}
+    else if(choice>=80&&choice<86){if(!setBadgeStyle(choice-80))MessageBoxW(panel?panel:window,tr(TXT_saveFailed),tr(TXT_app),MB_OK|MB_ICONERROR);}
     updateMotion();refresh(0); report(); PostMessageW(window,WM_NULL,0,0);if(panel)InvalidateRect(panel,NULL,FALSE);
 }
 #include "session-panel.h"
@@ -487,6 +489,7 @@ static int lifecycleTest(void) {
 #include "motion-tests.h"
 #include "detection-tests.h"
 #include "custom-state-tests.h"
+#include "language-tests.h"
 int WINAPI WinMain(HINSTANCE instance,HINSTANCE prev,LPSTR command,int show) {
     MSG msg; WNDCLASSW wc; WCHAR home[1024],*slash; int probeOk; DWORD probe;
     enableDpiAwareness();
@@ -495,6 +498,7 @@ int WINAPI WinMain(HINSTANCE instance,HINSTANCE prev,LPSTR command,int show) {
     if(!GetEnvironmentVariableW(L"CODEX_HOME",home,1024)){if(!GetEnvironmentVariableW(L"USERPROFILE",home,1000))return 3;wcscat(home,L"\\.codex");}wcscpy(codexHome,home);
     ProcessIdToSessionId(GetCurrentProcessId(),&sessionId);
     imageName=(ImageNameFn)GetProcAddress(GetModuleHandleW(L"kernel32.dll"),"QueryFullProcessImageNameW");if(!imageName)return 2;
+    if(strstr(command,"--language-test"))return languageTest();
     if(strstr(command,"--self-test"))return selfTest();
     if(strstr(command,"--motion-test"))return motionTest();
     if(strstr(command,"--custom-test"))return customIconTest();
