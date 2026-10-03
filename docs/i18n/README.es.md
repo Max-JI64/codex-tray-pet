@@ -26,6 +26,10 @@ Son iconos de 32×32 ampliados, no grabaciones de escritorio. Conservan formas, 
 
 ![Gato trabajando con contador rojo](../images/working-unread.gif)
 
+En **Configuración → Color del contador** puedes elegir carbón, rojo (predeterminado), azul, verde, morado o blanco. Estos ejemplos mantienen el mismo gato y tamaño del contador sobre un fondo gris de la barra de tareas.
+
+![Comparación de los seis colores del contador](../images/badge-colors.png)
+
 Ejemplos de ventanas creados con el mismo código de Windows y títulos ficticios:
 
 ![Ejemplos de sesiones](../images/session-examples.png)

@@ -74,15 +74,31 @@ badge_frames[0].save(OUT / "working-unread.gif", save_all=True,
                      append_images=badge_frames[1:], duration=300,
                      loop=0, disposal=2, optimize=False)
 
+badge_colors = [("Charcoal", (47, 48, 56)), ("Red (default)", (229, 72, 77)),
+                ("Blue", (41, 121, 255)), ("Green", (22, 139, 91)),
+                ("Purple", (128, 84, 217)), ("White", (255, 255, 255))]
+color_gallery = Image.new("RGB", (840, 580), BACKGROUND)
+draw = ImageDraw.Draw(color_gallery)
+for number, (label, color) in enumerate(badge_colors):
+    image = icon(f"badge-color-{number}.bmp")
+    assert sum(image.getpixel((x, y)) == (*color, 255)
+               for y in range(16) for x in range(16, 32)) > 60, label
+    enlarged(image, 256).save(OUT / f"badge-color-{number}.png", optimize=True)
+    left, top = (number % 3) * 280, (number // 3) * 290
+    color_gallery.paste(enlarged(image, 192), (left + 44, top + 12))
+    box = draw.textbbox((0, 0), label, font=TITLE_FONT)
+    draw.text((left + (280 - box[2]) // 2, top + 222), label,
+              font=TITLE_FONT, fill=(28, 31, 36))
+color_gallery.save(OUT / "badge-colors.png", optimize=True)
+
 panel_labels = ["Running: elapsed time", "Completed: unread dots",
                 "Question: elapsed time + ?", "Error: unread result dots",
                 "Usage limit: resume markers"]
 panels = []
 for number in range(5):
     image = Image.open(BUILD / f"panel-{number}.bmp").convert("RGB")
-    # Shared native renderer uses (235,235,235) on the hovered first row,
-    # and (249,249,249) on the second row. Keep this check independent of font.
-    assert image.getpixel((7, 31)) == (235, 235, 235), "Hovered row highlight"
+    # State comparisons show both rows without a mouse or hover highlight.
+    assert image.getpixel((7, 31)) == (249, 249, 249), "Unhovered first row"
     assert image.getpixel((7, 53)) == (249, 249, 249), "Unhovered row background"
     image.save(OUT / f"panel-{number}.png", optimize=True)
     panels.append(image.resize((560, image.height * 2), Image.Resampling.LANCZOS))
@@ -93,7 +109,19 @@ for number, image in enumerate(panels):
     draw.text((left, top), panel_labels[number], font=TITLE_FONT, fill=(28, 31, 36))
     panel_gallery.paste(image, (left, top + 40))
 panel_gallery.save(OUT / "session-examples.png", optimize=True)
-panels[0].save(OUT / "session-hover.png", optimize=True)
+hover = Image.open(BUILD / "panel-hover.bmp").convert("RGB")
+assert hover.getpixel((7, 31)) == (235, 235, 235), "Hovered row highlight"
+assert hover.getpixel((7, 53)) == (249, 249, 249), "Unhovered second row"
+# The only additional pixels within the cursor region are the hand cursor:
+# subtract the known uniform row highlight from the unhovered image first.
+plain = Image.open(BUILD / "panel-0.bmp").convert("RGB")
+region = (158, 32, 180, 54)
+cursor_pixels = list(hover.crop(region).getdata())
+expected = [(235, 235, 235) if pixel == (249, 249, 249) else pixel
+            for pixel in plain.crop(region).getdata()]
+assert cursor_pixels != expected, "Standalone hover demo must include cursor"
+hover.resize((560, hover.height * 2), Image.Resampling.LANCZOS).save(
+    OUT / "session-hover.png", optimize=True)
 
 report = []
 for file in sorted(OUT.iterdir()):

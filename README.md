@@ -26,6 +26,10 @@ The unread counter uses the default red badge, shown here without the temporary 
 
 ![Blue working cat with a red unread-result counter](docs/images/working-unread.gif)
 
+Choose a counter color in **Settings → Counter color**: charcoal, red (default), blue, green, purple, or white. These examples use the same cat and counter size on a gray tray background.
+
+![Six unread-counter colors: charcoal, red, blue, green, purple, and white](docs/images/badge-colors.png)
+
 **Session-window examples, rendered with the same Windows drawing code and synthetic titles:**
 
 ![Running, completed, question, error, and usage-limit session examples](docs/images/session-examples.png)
