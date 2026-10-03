@@ -35,3 +35,9 @@ node tools/test-settings-http.cjs
 ```
 
 The HTTP fixture creates only a hidden test window, uses its own temporary directory, and never registers a tray icon or reads actual Codex sessions. Development tools are not required to run the installed pet.
+
+## Installed release validation
+
+On October 3, 2026, the public v0.2.0 ZIP was downloaded, its SHA-256 checked against the GitHub asset digest, and the existing v0.1.1 installation replaced on the author's Windows PC. Existing icon and notification preferences were copied locally. The scheduled task started the new pet, which reported successful Codex detection and tray registration.
+
+All five language commands were then sent through the same native command handler used by the menu. Each choice was checked against the saved preference and the running process's reported language. Spanish remained selected after stopping and restarting the actual pet through its registered scheduled task. The final language was returned to English. This did not involve a new desktop screenshot or a visual review, and does not verify Windows reboot/logoff or another-PC behavior.
