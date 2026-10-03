@@ -76,7 +76,7 @@ Browser settings bind to a temporary port on `127.0.0.1` and validate the access
 
 Detection follows events such as `task_started`, `task_complete`, structured errors, and question-tool calls. It can miss changes visible only in the UI, questions written only as ordinary text, and errors absent from local records. Codex's internal file formats may change. This app does not use an official live-status API. It tracks up to 256 sessions and discovers sessions from roughly the last seven days. Large text and image payloads pass through bounded buffers; only state metadata is retained.
 
-The release build passed the seven included automated checks on the author's Windows machine. Installation on another PC, a real Codex Exit/relaunch, and a Windows login restart were not exercised during this release preparation. The executable is unsigned.
+The release build passed the seven included automated checks on the author's Windows machine. The public v0.1.1 ZIP was downloaded and actually installed on that PC: removal, startup registration, the running process, Codex detection, tray registration, and repeated installation passed. See [installation validation](docs/INSTALLATION-VALIDATION.md). Installation on another PC, a real Codex Exit/relaunch, and a Windows login restart were not exercised. The executable is unsigned.
 
 ## Build from source
 
