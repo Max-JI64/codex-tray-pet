@@ -6,6 +6,8 @@
 
 A small animated cat in the Windows notification area that follows your Codex desktop tasks. Open its session list to see running tasks, questions, usage-limit interruptions, and unread results without switching between chats.
 
+Built for the **Windows Codex desktop app**. The monitored desktop process is named `ChatGPT.exe`, but belongs to the `OpenAI.Codex` package. This is the Codex app shown in the examples; the separate ChatGPT desktop app and chats on chatgpt.com are not monitored.
+
 Written in C with the Windows API. The resident app requires no Python, Node.js, .NET, or embedded browser runtime. This is an independent project, unaffiliated with OpenAI. The current application UI is in Korean; the links above translate the documentation.
 
 ## See it in action
@@ -20,9 +22,19 @@ Written in C with the Windows API. The resident app requires no Python, Node.js,
 
 These are enlarged 32×32 icons, not desktop recordings. They retain the actual icon shapes, colors, badge proportions, and 300ms native animation cadence. The gray background approximates the supplied tray screenshot. Static states remain static.
 
+The unread counter uses the default red badge, shown here without the temporary completion pulse:
+
+![Blue working cat with a red unread-result counter](docs/images/working-unread.gif)
+
 **Session-window examples, rendered with the same Windows drawing code and synthetic titles:**
 
 ![Running, completed, question, error, and usage-limit session examples](docs/images/session-examples.png)
+
+**Hover a session, then click to open it in the Codex desktop app:**
+
+![Hovered session title with gray row highlight and hand cursor](docs/images/session-hover.png)
+
+The hovered row changes to light gray and the pointer becomes a hand. Clicking a title opens that session through `codex://threads/<session ID>` in the Codex desktop app. The link is opened only when you click; it does not add a resident navigation process. The image is an off-screen rendering of the hover state, not a recording of navigation.
 
 Running rows show elapsed time. Unread completed results show a blue dot. Questions add a circled `?`. Usage-blocked rows show a red circled `i` so you can find tasks to resume. Ordinary unread error results currently use the same blue unread dot as completed results; the tray cat turns red. These examples describe the current behavior, including that limitation. The panels retain the current Korean UI labels.
 
@@ -67,6 +79,27 @@ Open **설정 → 아이콘 변경** (Settings → Change icon) to use browser s
 - Transparent margins are fitted using a shared crop across the set, preserving movement between frames. Custom icons have no bottom status bar.
 
 Only the active state's custom frames remain resident. Eight frames contain **32KiB of pixel data**; that is not the app's total memory usage. Windows icon handles, process overhead, and temporary browser conversion memory are separate. Browser settings run on demand through the same native process, with no separate resident web server or image decoder. The page includes image requirements and a character-creation prompt for ChatGPT.
+
+### What you can change
+
+The session panel's **설정** button opens the native settings menu. **아이콘 변경...** or **브라우저에서 설정 열기...** opens settings in your default browser, including Chrome if it is your default. Chrome is not bundled or kept running by the pet.
+
+| Control | Native menu | Browser settings |
+|---|---|---|
+| Return to automatic detection | Yes | Yes |
+| Preview states, usage-limit motion, long-task motion, or unread counter | Yes | Yes; the preview also changes the tray |
+| Unread-counter color | Charcoal, red (default), blue, green, purple, white | Same six colors, with a save button |
+| Animation and color changes | Toggle | Toggle and save |
+| Use your own pet artwork | Opens browser settings | Choose default cat or uploaded artwork; save the selection |
+| Upload animated artwork | Opens browser settings | GIF or PNG/ICO frames; choose shared or per-state slot, set conversion interval, preview, and apply |
+| Character-creation guide | Available through browser settings | Enter a character, choose motion and timing, then copy a ChatGPT prompt |
+| Acknowledge local completed/error/stopped indications | Yes | Yes |
+| Acknowledge usage-limit flashing | Yes | Yes |
+| Hide the pet for the current Codex run | Yes | Yes |
+| Stop the watcher | Yes | Yes |
+| Refresh settings, return to current-icon preview, close the settings connection | Open settings again | Dedicated controls |
+
+You can replace the cat with **your own static or animated pet images**, then switch back to the default cat. A state-specific set overrides the shared set; without either, that state uses the default cat. The browser's character and motion selections generate an artwork prompt, rather than redrawing uploaded images. Acknowledging an indication affects the pet; it does not change Codex's read state or restore exhausted account usage.
 
 ## Detection, privacy, and limitations
 

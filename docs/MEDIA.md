@@ -4,9 +4,11 @@
 
 All other images use synthetic sessions and the application's own icon and panel drawing functions. `tools/render-demo.c` includes the application source to call `makeIcon`, `makeMotionIcon`, `badgeIcon`, and the shared `drawPanel` renderer. It renders into off-screen Windows bitmap surfaces and never creates a visible window or tray icon, reads account/session files, or calls the running Codex app. `tools/make-doc-images.py` packages those bitmaps as PNGs and looping GIFs.
 
-The panel renderer is shared with the real application. Titles and durations are sample data. The error example deliberately shows the existing blue unread dots: ordinary error rows do not yet have a dedicated error marker. Usage-limit interruptions have their own red `i` marker. The current interface labels remain Korean.
+The panel renderer is shared with the real application. Titles and durations are sample data. Each example highlights the first hovered row using the actual gray hover fill and the Windows hand cursor used for clickable titles. The error example deliberately shows the existing blue unread dots: ordinary error rows do not yet have a dedicated error marker. Usage-limit interruptions have their own red `i` marker. The current interface labels remain Korean.
 
 Enlarged GIFs use nearest-neighbor scaling to preserve the native pixel-art shapes. They loop indefinitely with 300ms between frames. The full state gallery has four frames; the working cat has two distinct appearances, and the usage-limit motion has three. Idle, completed, stopped, and detection-uncertain examples remain still.
+
+The unread badge uses the actual default red (`#e5484d`) without the temporary completion pulse. The earlier demo incorrectly enabled the bright-pulse variant on every nonzero frame, which made the badge look muted. The renderer now keeps the badge pixels identical across frames. `working-unread.gif` provides a standalone enlarged version. Checks verify that the encoded gallery GIF retains a red badge and that the hovered and unhovered rows have their actual background colors.
 
 ## Regenerate on Windows
 

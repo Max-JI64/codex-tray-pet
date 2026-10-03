@@ -13,7 +13,7 @@ static int writeBitmap(const WCHAR *name,int width,int height,const DWORD *pixel
 }
 static int renderSessionExample(int example){
     Chat sample[3]={{0}};BITMAPINFO bi={0};HBITMAP bitmap;HDC dc;DWORD *pixels;HGDIOBJ old;RECT bounds;WCHAR name[80];int i,ok;
-    chats=sample;chatCount=panelCount=2;panelOffset=0;panelHover=-1;readStateOk=1;desktopStartedAt=0;
+    chats=sample;chatCount=panelCount=2;panelOffset=0;panelHover=0;readStateOk=1;desktopStartedAt=0;
     for(i=0;i<2;i++){sample[i].allowed=1;sample[i].latestAt=nowSeconds();sample[i].startedAt=nowSeconds()-(i?724:83);panelRows[i]=i;}
     wcscpy(sample[0].title,L"Build documentation");wcscpy(sample[1].title,L"Review changes");
     sample[0].mood=sample[1].mood=example==0?WORK:example==1?DONE:example==2?QUESTION:example==3?ERROR_STATE:STOPPED;
@@ -21,7 +21,9 @@ static int renderSessionExample(int example){
     bounds.left=bounds.top=0;bounds.right=px(280);bounds.bottom=panelHeight();
     bi.bmiHeader.biSize=sizeof(BITMAPINFOHEADER);bi.bmiHeader.biWidth=bounds.right;bi.bmiHeader.biHeight=-bounds.bottom;bi.bmiHeader.biPlanes=1;bi.bmiHeader.biBitCount=32;
     dc=CreateCompatibleDC(NULL);bitmap=CreateDIBSection(dc,&bi,DIB_RGB_COLORS,(void**)&pixels,NULL,0);if(!dc||!bitmap)return 0;
-    old=SelectObject(dc,bitmap);drawPanel(dc,bounds);GdiFlush();
+    old=SelectObject(dc,bitmap);drawPanel(dc,bounds);
+    /* Same hand cursor selected by panelProc for a hovered session title. */
+    DrawIconEx(dc,px(158),px(panelHeaderHeight+2),(HICON)LoadCursor(NULL,IDC_HAND),px(22),px(22),0,NULL,DI_NORMAL);GdiFlush();
     _snwprintf(name,80,L"panel-%d.bmp",example);ok=writeBitmap(name,bounds.right,bounds.bottom,pixels);
     SelectObject(dc,old);DeleteObject(bitmap);DeleteDC(dc);chats=NULL;chatCount=0;return ok;
 }
@@ -33,7 +35,7 @@ int main(void){
         icon=state<7?makeIcon(state,frame%2):makeMotionIcon(state-7,frame);
         if(!icon){failed++;continue;}
         if(!copyIconPixels(icon,pixels))failed++;else{_snwprintf(name,80,L"icon-%d-%d.bmp",state,frame);failed+=!writeBitmap(name,32,32,pixels);}
-        if(state==WORK){withBadge=badgeIcon(icon,3,frame);if(!withBadge)failed++;else{copyIconPixels(withBadge,pixels);_snwprintf(name,80,L"badge-%d.bmp",frame);failed+=!writeBitmap(name,32,32,pixels);DestroyIcon(withBadge);}}
+        if(state==WORK){withBadge=badgeIcon(icon,3,0);if(!withBadge)failed++;else{copyIconPixels(withBadge,pixels);_snwprintf(name,80,L"badge-%d.bmp",frame);failed+=!writeBitmap(name,32,32,pixels);DestroyIcon(withBadge);}}
         DestroyIcon(icon);
     }
     for(state=0;state<5;state++)failed+=!renderSessionExample(state);
