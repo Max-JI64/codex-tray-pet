@@ -1,5 +1,7 @@
 # Codex Tray Pet
 
+> **Windows x64 専用です。Windows 版 Codex デスクトップアプリが必要です。macOS と Linux は非対応です。**
+
 [English](../../README.md) · [한국어](README.ko.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md)
 
 Windows の通知領域で Codex デスクトップアプリの作業状態を知らせる、小さな猫のプログラムです。セッション一覧から、実行中の作業、質問、使用量制限による中断、未読の結果を確認できます。
@@ -28,12 +30,14 @@ GIF と例のウィンドウはコードで作成しました。AI 画像生成�
 
 ## インストール
 
-1. [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) から `codex-tray-pet-v0.1.0-windows-x64.zip` をダウンロードします。
+1. [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) から `codex-tray-pet-v0.1.1-windows-x64.zip` をダウンロードします。
 2. 今後も使用するフォルダーに展開します。移動した場合は自動起動のパスを再登録してください。
 3. `Install.cmd` を実行します。現在の Windows ユーザーのログイン時タスクを登録し、監視を開始します。
 4. 猫が見えない場合は、通知領域の `^` メニューから表示させます。
 
 手動起動には `Start.cmd`、自動起動の解除とこのインストールの停止には `Uninstall.cmd` を使います。アンインストール後もファイルと設定は残ります。別のフォルダーを指す同名のタスクは上書き・削除しません。
+
+インストール・削除の起動ファイルは、ダウンロードした未署名スクリプトを実行するため、その PowerShell プロセスだけに `-ExecutionPolicy Bypass` を適用します。Windows 全体やユーザーの実行ポリシー設定は変更しません。組織が強制するポリシーは引き続き適用されます。別のフォルダーへ更新する前に、旧版の `Uninstall.cmd` を実行してください。インストーラーは新しいプロセスが動作し続けていることを確認してから成功を表示します。
 
 対象は Windows x64 と Codex デスクトップアプリです。CLI、VS Code 拡張機能、通常の ChatGPT アプリは対象外です。Codex がバックグラウンドに残る場合、ウィンドウを閉じても監視を続けます。Codex のトレイメニューで **Exit** を選ぶと猫の表示と使用中のリソースを解放します。次の Codex 起動を検出するため、小さな監視プロセスは残ります。
 

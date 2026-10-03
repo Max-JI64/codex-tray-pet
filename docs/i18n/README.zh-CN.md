@@ -1,5 +1,7 @@
 # Codex Tray Pet
 
+> **仅支持 Windows x64，需要 Windows 版 Codex 桌面应用。不支持 macOS 和 Linux。**
+
 [English](../../README.md) · [한국어](README.ko.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md)
 
 这是一个在 Windows 通知区域显示 Codex 桌面应用任务状态的小猫程序。打开会话列表即可查看正在运行的任务、问题、用量限制导致的中断和未读结果。
@@ -28,12 +30,14 @@ GIF 和示例窗口均通过代码制作，没有使用 AI 图像生成或重新
 
 ## 安装
 
-1. 从 [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) 下载 `codex-tray-pet-v0.1.0-windows-x64.zip`。
+1. 从 [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) 下载 `codex-tray-pet-v0.1.1-windows-x64.zip`。
 2. 解压到长期保留的目录。以后移动目录时，需要重新注册启动路径。
 3. 运行 `Install.cmd`，为当前 Windows 用户注册登录计划任务并启动监视程序。
 4. 如果猫被隐藏，请从通知区域的 `^` 菜单移出。
 
 手动启动使用 `Start.cmd`。移除自动启动并停止此安装使用 `Uninstall.cmd`，文件和设置会保留。脚本不会覆盖或删除指向其他目录的同名计划任务。
+
+安装与卸载启动器仅在自己的 PowerShell 进程中使用 `-ExecutionPolicy Bypass`，以运行下载的未签名辅助脚本，不会更改 Windows 或用户的执行策略设置。组织强制执行的策略仍可能阻止安装。更新到其他目录前，请先运行旧目录的 `Uninstall.cmd`。安装器会确认新进程持续运行后才报告成功。
 
 支持 Windows x64 和 Codex 桌面应用，不监视 CLI、VS Code 扩展或普通 ChatGPT 应用。如果 Codex 仍在后台运行，只关闭窗口不会停止监视。在 Codex 托盘菜单选择 **Exit** 后，小猫图标会消失并释放活动资源。一个小型监视进程仍会保留，以检测下次 Codex 启动并恢复小猫。
 

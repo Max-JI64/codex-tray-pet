@@ -1,5 +1,7 @@
 # Codex Tray Pet
 
+> **Windows x64 전용입니다. Windows용 Codex 데스크톱 앱이 필요하며 macOS·Linux는 지원하지 않습니다.**
+
 [English](../../README.md) · [한국어](README.ko.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md)
 
 Windows에서 Codex 데스크톱 앱의 작업 상태를 시계 옆 고양이 아이콘으로 알려주는 작은 프로그램입니다. C와 Windows API로 만들었으며 .NET·Python·Node 런타임을 상주시키지 않습니다. OpenAI와 별개의 개인 프로젝트입니다.
@@ -26,12 +28,14 @@ Windows에서 Codex 데스크톱 앱의 작업 상태를 시계 옆 고양이 �
 
 ## 설치
 
-1. [Releases](https://github.com/Max-JI64/codex-tray-pet/releases)에서 `codex-tray-pet-v0.1.0-windows-x64.zip`을 받습니다.
+1. [Releases](https://github.com/Max-JI64/codex-tray-pet/releases)에서 `codex-tray-pet-v0.1.1-windows-x64.zip`을 받습니다.
 2. 계속 사용할 폴더에 ZIP을 풉니다. 설치 후 폴더를 이동하면 자동 실행 경로도 다시 등록해야 합니다.
 3. `Install.cmd`를 실행합니다. 현재 사용자의 로그인 예약 작업에 등록하고 펫을 실행합니다.
 4. 시계 옆에 보이지 않으면 숨겨진 아이콘 메뉴 `^`에서 고양이를 꺼냅니다.
 
 자동 연결이 필요 없으면 `Start.cmd`로 직접 실행하세요. 자동 연결을 해제하려면 `Uninstall.cmd`를 실행합니다. 설치·해제는 다른 프로그램의 같은 이름 예약 작업을 덮어쓰거나 삭제하지 않습니다.
+
+설치·해제 실행 파일은 인터넷에서 내려받은 서명 없는 도우미 스크립트를 실행하기 위해 해당 PowerShell 프로세스에만 `-ExecutionPolicy Bypass`를 적용합니다. Windows 전체나 사용자 실행 정책 설정은 바꾸지 않습니다. 조직에서 강제하는 정책은 여전히 설치를 막을 수 있습니다. 다른 폴더의 버전으로 바꿀 때는 기존 폴더의 `Uninstall.cmd`부터 실행하세요. 설치 프로그램은 새 프로세스가 계속 실행되는지 확인한 뒤 성공을 안내합니다.
 
 Windows x64와 Codex 데스크톱 앱을 대상으로 합니다. CLI·VS Code 확장·일반 ChatGPT 앱은 감지 대상이 아닙니다. Codex 창만 닫아 백그라운드에 남으면 계속 감지하며, Codex 트레이 메뉴의 **Exit**로 종료하면 펫 표시와 관련 자원을 해제합니다. 다시 켜면 감시 프로그램이 펫을 표시합니다. Codex 종료 후에는 다음 실행을 찾는 작은 감시 프로세스가 남습니다.
 
