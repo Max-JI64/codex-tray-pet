@@ -37,7 +37,7 @@ typedef struct { DWORD pid,parent; } Candidate;
 typedef struct {
     WCHAR path[1024]; LONGLONG offset; int allowed,mood,ready,unknown;
     char turn[128], questionId[128]; int asyncQuestion;
-    char id[64]; WCHAR title[256]; LONGLONG startedAt,latestAt,quotaAt; int finished,quotaBlocked,quotaUnread;
+    char id[64]; WCHAR title[256]; LONGLONG startedAt,latestAt,quotaAt,rolloutAt; int finished,quotaBlocked,quotaUnread;
 } Chat;
 typedef struct {
     char type[48],ev[48],turn[128],name[128],id[128],role[32],origin[80],parent[128];
@@ -51,6 +51,10 @@ static ImageNameFn imageName;
 static WCHAR folder[1024],sessions[1024];
 static Chat *chats;
 static int chatCount,overflow,mood=IDLE,manual=-1,animation=1,phase,iconsAdded;
+/* Cache immutable metadata decisions without retaining excluded agents as chats. */
+#define SEEN_ROLLOUTS 1024
+static ULONGLONG seenRollouts[SEEN_ROLLOUTS];
+static int seenRolloutCount,seenRolloutNext;
 static HICON icons[7][2];
 static NOTIFYICONDATAW tray;
 static UINT taskbarCreated;
@@ -112,6 +116,7 @@ static void applyCommand(int choice);
 static void detectionSnapshot(void);
 static LONGLONG nowSeconds(void) { FILETIME ft; ULARGE_INTEGER n;GetSystemTimeAsFileTime(&ft);n.LowPart=ft.dwLowDateTime;n.HighPart=ft.dwHighDateTime;return (n.QuadPart-116444736000000000LL)/10000000; }
 static LONGLONG isoSeconds(const char *text) { SYSTEMTIME s={0};FILETIME ft;ULARGE_INTEGER n;unsigned y,mo,d,h,mi,se;if(sscanf(text,"%u-%u-%uT%u:%u:%u",&y,&mo,&d,&h,&mi,&se)!=6)return 0;s.wYear=y;s.wMonth=mo;s.wDay=d;s.wHour=h;s.wMinute=mi;s.wSecond=se;if(!SystemTimeToFileTime(&s,&ft))return 0;n.LowPart=ft.dwLowDateTime;n.HighPart=ft.dwHighDateTime;return(n.QuadPart-116444736000000000LL)/10000000;}
+static LONGLONG isoMilliseconds(const char *text){LONGLONG seconds=isoSeconds(text);const char *p=strchr(text,'.');int n=0,i;if(!seconds)return 0;if(p){p++;for(i=0;i<3;i++)n=n*10+(*p>='0'&&*p<='9'?*p++-'0':0);}return seconds*1000+n;}
 
 /* JSON reader copies only relevant direct fields. Nested content is skipped, never materialized. */
 static const char *ws(const char *p) { while(*p && (unsigned char)*p<=32) p++; return p; }
@@ -188,7 +193,7 @@ static int parse(const char *p,Record *r) {
 static void fold(Chat *c,Record *r,int boot) {
     if(strcmp(r->type,"session_meta")==0) {
         c->allowed=strcmp(r->origin,"Codex Desktop")==0 && !r->parent[0] && !r->sourceObject;
-        strncpy(c->id,r->chatId,63); return;
+        strncpy(c->id,r->chatId,63);c->rolloutAt=isoMilliseconds(r->timestamp); return;
     }
     if(!c->allowed) return;
     if(r->timestamp[0]) {LONGLONG at=isoSeconds(r->timestamp);if(at>c->latestAt)c->latestAt=at;}
@@ -257,15 +262,35 @@ static int readChat(Chat *c,int boot) {
     }
     c->offset=committed; CloseHandle(file); return 1;
 }
-static void readChatMetadata(Chat *c){HANDLE file;char buffer[IO_CAP];DWORD got,j;StreamRecord *record=(StreamRecord*)lineBuf;
-    file=CreateFileW(c->path,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);if(file==INVALID_HANDLE_VALUE)return;memset(record,0,sizeof(*record));
-    while(ReadFile(file,buffer,sizeof(buffer),&got,NULL)&&got){for(j=0;j<got;j++)if(buffer[j]=='\n'){if(streamFinish(record))fold(c,&record->record,1);CloseHandle(file);return;}else streamFeed(record,(unsigned char)buffer[j]);}CloseHandle(file);
+static int readChatMetadata(Chat *c){HANDLE file;char buffer[IO_CAP];DWORD got,j;int valid;StreamRecord *record=(StreamRecord*)lineBuf;
+    file=CreateFileW(c->path,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);if(file==INVALID_HANDLE_VALUE)return 0;memset(record,0,sizeof(*record));
+    while(ReadFile(file,buffer,sizeof(buffer),&got,NULL)&&got){for(j=0;j<got;j++)if(buffer[j]=='\n'){valid=streamFinish(record)&&!strcmp(record->record.type,"session_meta")&&record->record.chatId[0];if(valid)fold(c,&record->record,1);CloseHandle(file);return valid;}else streamFeed(record,(unsigned char)buffer[j]);}CloseHandle(file);return 0;
 }
-static void freeChats(void) { dbShutdown();if(chats) VirtualFree(chats,0,MEM_RELEASE); if(lineBuf) VirtualFree(lineBuf,0,MEM_RELEASE); chats=NULL; lineBuf=NULL; chatCount=overflow=0; unreadCount=panelCount=0; finishedUnread=longWorkCount=motion=0;completionPulseUntil=quotaLogAt=quotaAckAt=0;manualMotion=-1;readStateOk=0;memset(&indexStamp,0,sizeof(indexStamp));memset(&unreadStateStamp,0,sizeof(unreadStateStamp));memset(&unreadAuthStamp,0,sizeof(unreadAuthStamp)); }
+static void freeChats(void) { dbShutdown();if(chats) VirtualFree(chats,0,MEM_RELEASE); if(lineBuf) VirtualFree(lineBuf,0,MEM_RELEASE); chats=NULL; lineBuf=NULL; chatCount=overflow=0;seenRolloutCount=seenRolloutNext=0;memset(seenRollouts,0,sizeof(seenRollouts)); unreadCount=panelCount=0; finishedUnread=longWorkCount=motion=0;completionPulseUntil=quotaLogAt=quotaAckAt=0;manualMotion=-1;readStateOk=0;memset(&indexStamp,0,sizeof(indexStamp));memset(&unreadStateStamp,0,sizeof(unreadStateStamp));memset(&unreadAuthStamp,0,sizeof(unreadAuthStamp)); }
 static int ensureChats(void) {
     if(!chats) chats=VirtualAlloc(NULL,sizeof(Chat)*MAX_CHATS,MEM_RESERVE|MEM_COMMIT,PAGE_READWRITE);
     if(!lineBuf) lineBuf=VirtualAlloc(NULL,LINE_CAP,MEM_RESERVE|MEM_COMMIT,PAGE_READWRITE);
     return chats && lineBuf;
+}
+static ULONGLONG rolloutHash(const WCHAR *path){ULONGLONG h=14695981039346656037ULL;while(*path){h^=(unsigned short)*path++;h*=1099511628211ULL;}return h;}
+static int seenRollout(const WCHAR *path){ULONGLONG hash=rolloutHash(path);int i;for(i=0;i<seenRolloutCount;i++)if(seenRollouts[i]==hash)return 1;return 0;}
+static void rememberRollout(const WCHAR *path){if(!path[0])return;seenRollouts[seenRolloutNext]=rolloutHash(path);seenRolloutNext=(seenRolloutNext+1)%SEEN_ROLLOUTS;if(seenRolloutCount<SEEN_ROLLOUTS)seenRolloutCount++;}
+static int rolloutSlot(const Chat *candidate){int i;if(!candidate->allowed||!candidate->id[0])return -1;
+    for(i=0;i<chatCount;i++)if(!strcmp(chats[i].id,candidate->id))return candidate->rolloutAt>chats[i].rolloutAt||!chats[i].path[0]?i:-1;
+    return chatCount<MAX_CHATS?chatCount:-2;
+}
+static void discoverRollout(const WCHAR *path){Chat candidate={0};int i,slot;
+    for(i=0;i<chatCount;i++)if(!wcscmp(chats[i].path,path))return;
+    if(seenRollout(path))return;wcscpy(candidate.path,path);
+    /* Incomplete metadata is retried; only validated exclusions are cached. */
+    if(!readChatMetadata(&candidate))return;
+    slot=rolloutSlot(&candidate);if(slot==-1){rememberRollout(path);return;}if(slot==-2){overflow=1;return;}
+    if(!readChat(&candidate,1))return;
+    if(slot<chatCount){
+        if(!candidate.latestAt)return;
+        wcscpy(candidate.title,chats[slot].title);rememberRollout(chats[slot].path);
+    }else chatCount++;
+    chats[slot]=candidate;
 }
 static void discover(void) {
     FILETIME ft; ULARGE_INTEGER time; int day;
@@ -277,15 +302,9 @@ static void discover(void) {
         _snwprintf(pattern,1100,L"%ls\\rollout-*.jsonl",dir); find=FindFirstFileW(pattern,&data);
         if(find==INVALID_HANDLE_VALUE) continue;
         do {
-            WCHAR path[1024]; int i; Chat *c;
+            WCHAR path[1024];
             if(_snwprintf(path,1024,L"%ls\\%ls",dir,data.cFileName)<0) { overflow=1; continue; }
-            for(i=0;i<chatCount;i++) if(wcscmp(chats[i].path,path)==0) break;
-            if(i<chatCount) continue;
-            if(chatCount==MAX_CHATS) { overflow=1; continue; }
-            c=&chats[chatCount++]; memset(c,0,sizeof(*c)); wcscpy(c->path,path); c->mood=IDLE;
-            /* Read metadata before seeking tail, so child/guardian agents are excluded. */
-            readChatMetadata(c);
-            if(c->allowed) readChat(c,1);
+            discoverRollout(path);
         } while(FindNextFileW(find,&data));
         FindClose(find);
     }

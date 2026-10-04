@@ -1,9 +1,36 @@
 static void detectionSnapshot(void){WCHAR path[1100];FILE *f;int i,n=0;_snwprintf(path,1100,L"%ls\\detection-live.json",folder);f=_wfopen(path,L"wb");if(!f)return;
-    fprintf(f,"{\"pid\":%lu,\"state\":%d,\"desktopStartedAt\":%lld,\"recordBufferBytes\":%d,\"rows\":[",GetCurrentProcessId(),mood,desktopStartedAt,LINE_CAP);
+    fprintf(f,"{\"pid\":%lu,\"state\":%d,\"desktopStartedAt\":%lld,\"recordBufferBytes\":%d,\"trackedSessions\":%d,\"capacityExceeded\":%s,\"cachedRollouts\":%d,\"rows\":[",GetCurrentProcessId(),mood,desktopStartedAt,LINE_CAP,chatCount,overflow?"true":"false",seenRolloutCount);
     for(i=0;i<chatCount;i++)if(latestChat(i)){Chat *c=&chats[i];if(n++)fprintf(f,",");fprintf(f,"{\"id\":\"%s\",\"state\":%d,\"active\":%s,\"question\":%s,\"unknown\":%s,\"finished\":%s,\"ready\":%s,\"startedAt\":%lld,\"latestAt\":%lld,\"readOffset\":%lld}",c->id,c->mood,activeChat(c)?"true":"false",askingChat(c)?"true":"false",c->unknown?"true":"false",c->finished?"true":"false",c->ready?"true":"false",c->startedAt,c->latestAt,c->offset);}
     fprintf(f,"]}");fclose(f);
 }
 static void fixturePadding(FILE *f,int size){char data[IO_CAP];memset(data,'x',sizeof(data));while(size>0){int take=size>(int)sizeof(data)?sizeof(data):size;fwrite(data,1,take,f);size-=take;}}
+static int discoveryCapacityTest(FILE *f){WCHAR path[1100],oldPath[1100],newPath[1100];FILE *data;int i,failed=0;Chat candidate={0};
+    for(i=0;i<MAX_CHATS+44;i++){
+        _snwprintf(path,1100,L"%ls\\excluded-rollout-%d.tmp",folder,i);data=_wfopen(path,L"wb");if(!data)return 1;
+        fprintf(data,"{\"timestamp\":\"2026-10-04T10:00:00.000Z\",\"type\":\"session_meta\",\"payload\":{\"id\":\"child-%d\",\"originator\":\"Codex Desktop\",\"source\":{\"subagent\":{\"other\":\"guardian\"}}}}\n",i);fclose(data);
+        discoverRollout(path);DeleteFileW(path);
+    }
+    failed+=check(chatCount==0&&!overflow&&seenRolloutCount==MAX_CHATS+44,"300 excluded agents consume no session slots; metadata cache stays bounded",f);
+    for(i=0;i<MAX_CHATS;i++){
+        _snwprintf(path,1100,L"%ls\\root-rollout-%d.tmp",folder,i);data=_wfopen(path,L"wb");if(!data)return 1;
+        fprintf(data,"{\"timestamp\":\"2026-10-04T10:00:00.100Z\",\"type\":\"session_meta\",\"payload\":{\"id\":\"root-%d\",\"originator\":\"Codex Desktop\",\"source\":\"vscode\"}}\n",i);
+        if(!i)fprintf(data,"{\"timestamp\":\"2026-10-04T10:01:00Z\",\"type\":\"event_msg\",\"payload\":{\"type\":\"task_started\",\"turn_id\":\"old-turn\"}}\n{\"timestamp\":\"2026-10-04T10:01:01Z\",\"type\":\"event_msg\",\"payload\":{\"type\":\"turn_aborted\",\"turn_id\":\"old-turn\"}}\n");
+        fclose(data);discoverRollout(path);if(!i)wcscpy(oldPath,path);else DeleteFileW(path);
+    }
+    failed+=check(chatCount==MAX_CHATS&&!overflow&&chats[0].mood==STOPPED,"all 256 slots remain available for desktop sessions",f);
+    wcscpy(chats[0].title,L"Retained title");panelCount=1;panelRows[0]=0;
+    _snwprintf(newPath,1100,L"%ls\\resumed-root-rollout.tmp",folder);data=_wfopen(newPath,L"wb");if(!data)return 1;
+    fprintf(data,"{\"timestamp\":\"2026-10-04T10:00:00.900Z\",\"type\":\"session_meta\",\"payload\":{\"id\":\"root-0\",\"originator\":\"Codex Desktop\",\"source\":\"vscode\"}}\n{\"timestamp\":\"2026-10-04T10:02:00Z\",\"type\":\"event_msg\",\"payload\":{\"type\":\"task_started\",\"turn_id\":\"resumed-turn\"}}\n");fclose(data);discoverRollout(newPath);
+    failed+=check(chatCount==MAX_CHATS&&!overflow&&chats[0].mood==WORK&&!wcscmp(chats[0].path,newPath)&&!wcscmp(chats[0].title,L"Retained title")&&panelRows[0]==0,"resumed rollout replaces stopped history at full capacity and retains row/title",f);
+    seenRolloutCount=seenRolloutNext=0;discoverRollout(oldPath);
+    failed+=check(!wcscmp(chats[0].path,newPath)&&aggregate(chats,chatCount,0)==WORK,"older rollout cannot override current work even after cache eviction",f);
+    data=_wfopen(newPath,L"ab");if(!data)return 1;fprintf(data,"{\"timestamp\":\"2026-10-04T10:03:00Z\",\"type\":\"event_msg\",\"payload\":{\"type\":\"task_complete\",\"turn_id\":\"resumed-turn\"}}\n");fclose(data);readChat(&chats[0],0);
+    failed+=check(chats[0].finished&&chats[0].ready&&aggregate(chats,chatCount,0)==DONE,"completion of resumed work becomes green rather than capacity gray",f);
+    candidate.allowed=1;strcpy(candidate.id,"beyond-capacity");failed+=check(rolloutSlot(&candidate)==-2,"true capacity exhaustion is distinguished from excluded metadata",f);
+    _snwprintf(path,1100,L"%ls\\partial-rollout.tmp",folder);data=_wfopen(path,L"wb");if(!data)return 1;fputs("{\"type\":\"session_meta\"",data);fclose(data);discoverRollout(path);
+    failed+=check(!seenRollout(path),"partial metadata is retried instead of permanently ignored",f);
+    DeleteFileW(path);DeleteFileW(oldPath);DeleteFileW(newPath);panelCount=0;return failed;
+}
 static int detectionTest(void){WCHAR path[1100],input[1100];FILE *f,*data;Chat c={0},pair[2];int failed=0;StreamRecord *stream;const char *example;int i;
     _snwprintf(path,1100,L"%ls\\detection-verification.txt",folder);f=_wfopen(path,L"wb");if(!f||!ensureChats())return 1;
     _snwprintf(input,1100,L"%ls\\detection-test-input.tmp",folder);wcscpy(c.path,input);data=_wfopen(input,L"wb");if(!data){fclose(f);return 1;}
@@ -24,5 +51,5 @@ static int detectionTest(void){WCHAR path[1100],input[1100];FILE *f,*data;Chat c
     stream=(StreamRecord*)lineBuf;memset(stream,0,sizeof(*stream));example="{\"type\":\"event_msg\",\"payload\":{\"type\":\"error\",\"willRetry\":true,\"error\":{\"codexErrorInfo\":\"UsageLimitExceeded\",\"message\":\"You've hit your usage limit\"}}}";for(i=0;example[i];i++)streamFeed(stream,example[i]);failed+=check(streamFinish(stream)&&stream->record.willRetry&&quotaCode(stream->record.errorCode)&&quotaMessage(stream->record.errorMessage),"structured retry and quota fields survive selective parsing",f);
     memset(stream,0,sizeof(*stream));example="{\"type\":\"session_meta\",\"payload\":{\"originator\":\"Codex Desktop\",\"source\":{\"subagent\":{\"other\":\"guardian\"}}}}";for(i=0;example[i];i++)streamFeed(stream,example[i]);failed+=check(streamFinish(stream)&&stream->record.sourceObject,"child source object remains distinguishable",f);
     failed+=check(LINE_CAP<32768,"record metadata storage is below 32KiB regardless of content length",f);
-    DeleteFileW(input);fclose(f);freeChats();return failed?1:0;
+    DeleteFileW(input);failed+=discoveryCapacityTest(f);fclose(f);freeChats();return failed?1:0;
 }

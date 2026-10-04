@@ -44,7 +44,7 @@ Estos ejemplos muestran el idioma inglés predeterminado. No se generaron con IA
 
 ## Instalación
 
-1. Descarga `codex-tray-pet-v0.2.0-windows-x64.zip` desde [Releases](https://github.com/Max-JI64/codex-tray-pet/releases).
+1. Descarga `codex-tray-pet-v0.2.1-windows-x64.zip` desde [Releases](https://github.com/Max-JI64/codex-tray-pet/releases).
 2. Extrae el ZIP en una carpeta que vayas a conservar. Si la mueves, registra de nuevo la ruta de inicio.
 3. Ejecuta `Install.cmd`: registra una tarea al iniciar sesión con tu usuario y arranca el monitor.
 4. Si el gato está oculto, muévelo fuera del menú `^` del área de notificaciones.
@@ -105,7 +105,7 @@ Lee registros locales de sesiones, estado de lectura y proyectos desde `CODEX_HO
 
 Los ajustes usan un puerto temporal en `127.0.0.1`, con validación de clave, Origin y Host. La conexión se cierra por solicitud, después de diez minutos sin peticiones API o al salir de Codex. Los diccionarios de idiomas están incluidos: no se usa un servicio de traducción ni un proceso adicional.
 
-Se detectan eventos como `task_started`, `task_complete`, errores estructurados y llamadas a herramientas de preguntas. Pueden perderse cambios visibles solo en la interfaz, preguntas de texto normal y errores no registrados. Los formatos internos de Codex pueden cambiar. No se usa una API oficial de estado en tiempo real. Se siguen hasta 256 sesiones de aproximadamente los últimos siete días. Los contenidos grandes pasan por búferes limitados y solo se conserva información de estado.
+Se detectan eventos como `task_started`, `task_complete`, errores estructurados y llamadas a herramientas de preguntas. Pueden perderse cambios visibles solo en la interfaz, preguntas de texto normal y errores no registrados. Los formatos internos de Codex pueden cambiar. No se usa una API oficial de estado en tiempo real. Se siguen hasta 256 sesiones de aproximadamente los últimos siete días. Los contenidos grandes pasan por búferes limitados y solo se conserva información de estado. Los registros de agentes secundarios excluidos no ocupan espacios; un nuevo registro de una sesión reanudada sustituye al anterior en el mismo espacio. Consulta la [validación de detección](../DETECTION-VALIDATION.md).
 
 La instalación pública v0.1.1 se descargó y se instaló realmente en el PC del autor. Se verificaron desinstalación, registro de inicio, proceso, detección de Codex, registro de bandeja y ausencia de duplicados. Consulta la [validación](../INSTALLATION-VALIDATION.md). La versión con idiomas tiene ocho comprobaciones nativas y pruebas de traducción del navegador. No se han verificado otro PC, un reinicio de Windows ni una salida y reapertura real de Codex. El ejecutable no está firmado.
 
