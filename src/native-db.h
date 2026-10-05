@@ -16,6 +16,7 @@ static int (*sqlBusy)(PetDb*,int);
 static LONGLONG quotaCursor;
 static int quotaDbOk;
 static int quotaBootDone;
+static LONGLONG threadCursor;
 __declspec(dllimport) int WINAPI WideCharToMultiByte(UINT,DWORD,LPCWSTR,int,LPSTR,int,LPCSTR,LPBOOL);
 static int dbInit(void) {
     WCHAR path[MAX_PATH];if(sqlModule)return 1;
@@ -26,7 +27,7 @@ static int dbInit(void) {
     return 1;
 fail: FreeLibrary(sqlModule);sqlModule=NULL;return 0;
 }
-static void dbShutdown(void){if(sqlModule)FreeLibrary(sqlModule);sqlModule=NULL;quotaCursor=0;quotaDbOk=quotaBootDone=0;}
+static void dbShutdown(void){if(sqlModule)FreeLibrary(sqlModule);sqlModule=NULL;quotaCursor=threadCursor=0;quotaDbOk=quotaBootDone=0;}
 static PetDb *dbRead(const WCHAR *name) {
     WCHAR path[1100];char utf8[4400];PetDb *db=NULL;
     if(!dbInit())return NULL;_snwprintf(path,1100,L"%ls\\%ls",codexHome,name);
@@ -35,6 +36,18 @@ static PetDb *dbRead(const WCHAR *name) {
     sqlBusy(db,30);
     if(sqlExec(db,"PRAGMA cache_size=-64; PRAGMA mmap_size=0; PRAGMA query_only=ON",NULL,NULL,NULL)!=0){sqlClose(db);return NULL;}
     return db;
+}
+static int discoverIndexedSession(const char *id){PetDb *db=dbRead(L"state_5.sqlite");PetStmt *s=NULL;WCHAR path[1024];int found=0;if(!db)return 0;
+    if(sqlPrepare(db,"SELECT rollout_path FROM threads WHERE id=?",-1,&s,NULL)==0){sqlBindText(s,1,id,-1,NULL);if(sqlStep(s)==100){const char *text=(const char*)sqlText(s,0);if(text&&MultiByteToWideChar(CP_UTF8,0,text,-1,path,1024)){discoverRollout(path);found=1;}}}
+    if(s)sqlFinalize(s);sqlClose(db);return found;
+}
+static void pollUpdatedThreads(void){PetDb *db=dbRead(L"state_5.sqlite");PetStmt *s=NULL;WCHAR path[1024];LONGLONG last;int count=0;if(!db)return;
+    if(!threadCursor)threadCursor=nowSeconds()-7*86400;last=threadCursor;
+    if(sqlPrepare(db,"SELECT rollout_path,updated_at FROM threads WHERE updated_at>=? ORDER BY updated_at LIMIT 256",-1,&s,NULL)==0){sqlBindInt(s,1,threadCursor);
+        while(count++<256&&sqlStep(s)==100){const char *text=(const char*)sqlText(s,0);LONGLONG at=sqlInt(s,1);if(text&&MultiByteToWideChar(CP_UTF8,0,text,-1,path,1024))discoverRollout(path);if(at>last)last=at;}
+        threadCursor=last>threadCursor?last-1:threadCursor;
+    }
+    if(s)sqlFinalize(s);sqlClose(db);
 }
 static int projectName(const char *id,WCHAR *out,int cap) {
     PetDb *db;PetStmt *s=NULL;int found=0;out[0]=0;if(legacyProjectName(id,out,cap))return 1;db=dbRead(L"state_5.sqlite");if(!db)return 0;

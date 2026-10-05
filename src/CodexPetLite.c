@@ -38,6 +38,7 @@ typedef struct {
     WCHAR path[1024]; LONGLONG offset; int allowed,mood,ready,unknown;
     char turn[128], questionId[128]; int asyncQuestion;
     char id[64]; WCHAR title[256]; LONGLONG startedAt,latestAt,quotaAt,rolloutAt; int finished,quotaBlocked,quotaUnread;
+    FILETIME fileStamp;LONGLONG fileSize;int fileKnown,paused;
 } Chat;
 typedef struct {
     char type[48],ev[48],turn[128],name[128],id[128],role[32],origin[80],parent[128];
@@ -53,8 +54,11 @@ static Chat *chats;
 static int chatCount,overflow,mood=IDLE,manual=-1,animation=1,phase,iconsAdded;
 /* Cache immutable metadata decisions without retaining excluded agents as chats. */
 #define SEEN_ROLLOUTS 1024
-static ULONGLONG seenRollouts[SEEN_ROLLOUTS];
+typedef struct {ULONGLONG hash,idHash;LONGLONG size,offset,latestAt,rolloutAt;FILETIME stamp;int dormant,finished;} SeenRollout;
+static SeenRollout seenRollouts[SEEN_ROLLOUTS];
 static int seenRolloutCount,seenRolloutNext;
+static SIZE_T chatCommitted;
+static unsigned long logOpens,pausedSkips;
 static HICON icons[7][2];
 static NOTIFYICONDATAW tray;
 static UINT taskbarCreated;
@@ -114,6 +118,8 @@ static void browserSettingsPoll(void);
 static void openBrowserSettings(int iconSection);
 static void applyCommand(int choice);
 static void detectionSnapshot(void);
+static void pollUpdatedThreads(void);
+static void pruneChats(void);
 static LONGLONG nowSeconds(void) { FILETIME ft; ULARGE_INTEGER n;GetSystemTimeAsFileTime(&ft);n.LowPart=ft.dwLowDateTime;n.HighPart=ft.dwHighDateTime;return (n.QuadPart-116444736000000000LL)/10000000; }
 static LONGLONG isoSeconds(const char *text) { SYSTEMTIME s={0};FILETIME ft;ULARGE_INTEGER n;unsigned y,mo,d,h,mi,se;if(sscanf(text,"%u-%u-%uT%u:%u:%u",&y,&mo,&d,&h,&mi,&se)!=6)return 0;s.wYear=y;s.wMonth=mo;s.wDay=d;s.wHour=h;s.wMinute=mi;s.wSecond=se;if(!SystemTimeToFileTime(&s,&ft))return 0;n.LowPart=ft.dwLowDateTime;n.HighPart=ft.dwHighDateTime;return(n.QuadPart-116444736000000000LL)/10000000;}
 static LONGLONG isoMilliseconds(const char *text){LONGLONG seconds=isoSeconds(text);const char *p=strchr(text,'.');int n=0,i;if(!seconds)return 0;if(p){p++;for(i=0;i<3;i++)n=n*10+(*p>='0'&&*p<='9'?*p++-'0':0);}return seconds*1000+n;}
@@ -241,12 +247,15 @@ static int aggregate(Chat *list,int count,int capExceeded) {
 }
 static int readChat(Chat *c,int boot) {
     HANDLE file; LARGE_INTEGER size,pos; char buffer[IO_CAP]; DWORD got;StreamRecord *record=(StreamRecord*)lineBuf;
-    LONGLONG committed,at;
+    LONGLONG committed,at;WIN32_FILE_ATTRIBUTE_DATA attr;int observed=GetFileAttributesExW(c->path,GetFileExInfoStandard,&attr);
+    if(!boot&&c->paused&&c->fileKnown&&observed&&CompareFileTime(&c->fileStamp,&attr.ftLastWriteTime)==0&&c->fileSize==(((LONGLONG)attr.nFileSizeHigh<<32)|attr.nFileSizeLow)){pausedSkips++;return 1;}
     file=CreateFileW(c->path,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
     if(file==INVALID_HANDLE_VALUE) { if(GetLastError()!=ERROR_FILE_NOT_FOUND) c->unknown=1; return 0; }
+    logOpens++;
     if(!GetFileSizeEx(file,&size)) { CloseHandle(file); c->unknown=1; return 0; }
     if(size.QuadPart<c->offset) { c->offset=0; c->mood=UNKNOWN; c->questionId[0]=0; }
-    if(c->offset==size.QuadPart) { CloseHandle(file); return 1; }
+    if(observed){c->fileKnown=1;c->fileStamp=attr.ftLastWriteTime;c->fileSize=size.QuadPart;}
+    if(c->offset==size.QuadPart) { c->paused=c->mood!=WORK&&c->mood!=QUESTION;CloseHandle(file); return 1; }
     pos.QuadPart=c->offset;
     if(!SetFilePointerEx(file,pos,NULL,FILE_BEGIN)) { CloseHandle(file); c->unknown=1; return 0; }
     at=committed=c->offset;memset(record,0,sizeof(*record));
@@ -260,37 +269,64 @@ static int readChat(Chat *c,int boot) {
             } else streamFeed(record,(unsigned char)b);
         }
     }
-    c->offset=committed; CloseHandle(file); return 1;
+    c->offset=committed;c->paused=c->mood!=WORK&&c->mood!=QUESTION;
+    if(c->paused){memset(c->turn,0,sizeof(c->turn));memset(c->questionId,0,sizeof(c->questionId));c->asyncQuestion=0;}
+    CloseHandle(file); return 1;
 }
 static int readChatMetadata(Chat *c){HANDLE file;char buffer[IO_CAP];DWORD got,j;int valid;StreamRecord *record=(StreamRecord*)lineBuf;
     file=CreateFileW(c->path,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);if(file==INVALID_HANDLE_VALUE)return 0;memset(record,0,sizeof(*record));
     while(ReadFile(file,buffer,sizeof(buffer),&got,NULL)&&got){for(j=0;j<got;j++)if(buffer[j]=='\n'){valid=streamFinish(record)&&!strcmp(record->record.type,"session_meta")&&record->record.chatId[0];if(valid)fold(c,&record->record,1);CloseHandle(file);return valid;}else streamFeed(record,(unsigned char)buffer[j]);}CloseHandle(file);return 0;
 }
-static void freeChats(void) { dbShutdown();if(chats) VirtualFree(chats,0,MEM_RELEASE); if(lineBuf) VirtualFree(lineBuf,0,MEM_RELEASE); chats=NULL; lineBuf=NULL; chatCount=overflow=0;seenRolloutCount=seenRolloutNext=0;memset(seenRollouts,0,sizeof(seenRollouts)); unreadCount=panelCount=0; finishedUnread=longWorkCount=motion=0;completionPulseUntil=quotaLogAt=quotaAckAt=0;manualMotion=-1;readStateOk=0;memset(&indexStamp,0,sizeof(indexStamp));memset(&unreadStateStamp,0,sizeof(unreadStateStamp));memset(&unreadAuthStamp,0,sizeof(unreadAuthStamp)); }
+static void freeChats(void) { dbShutdown();if(chats) VirtualFree(chats,0,MEM_RELEASE); if(lineBuf) VirtualFree(lineBuf,0,MEM_RELEASE); chats=NULL;chatCommitted=0; lineBuf=NULL; chatCount=overflow=0;seenRolloutCount=seenRolloutNext=0;memset(seenRollouts,0,sizeof(seenRollouts));logOpens=pausedSkips=0; unreadCount=panelCount=0; finishedUnread=longWorkCount=motion=0;completionPulseUntil=quotaLogAt=quotaAckAt=0;manualMotion=-1;readStateOk=0;memset(&indexStamp,0,sizeof(indexStamp));memset(&unreadStateStamp,0,sizeof(unreadStateStamp));memset(&unreadAuthStamp,0,sizeof(unreadAuthStamp)); }
+static SIZE_T chatPages(int count){SYSTEM_INFO info;SIZE_T bytes;GetSystemInfo(&info);bytes=sizeof(Chat)*(count<4?4:count);return ((bytes+info.dwPageSize-1)/info.dwPageSize)*info.dwPageSize;}
+static int ensureChatCapacity(int count){SIZE_T bytes=chatPages(count);if(count>MAX_CHATS)return 0;
+    if(!chats)chats=VirtualAlloc(NULL,chatPages(MAX_CHATS),MEM_RESERVE,PAGE_READWRITE);
+    if(chats&&bytes>chatCommitted){if(!VirtualAlloc(chats,bytes,MEM_COMMIT,PAGE_READWRITE))return 0;chatCommitted=bytes;}return chats!=NULL;
+}
 static int ensureChats(void) {
-    if(!chats) chats=VirtualAlloc(NULL,sizeof(Chat)*MAX_CHATS,MEM_RESERVE|MEM_COMMIT,PAGE_READWRITE);
+    if(!ensureChatCapacity(chatCount))return 0;
     if(!lineBuf) lineBuf=VirtualAlloc(NULL,LINE_CAP,MEM_RESERVE|MEM_COMMIT,PAGE_READWRITE);
     return chats && lineBuf;
 }
 static ULONGLONG rolloutHash(const WCHAR *path){ULONGLONG h=14695981039346656037ULL;while(*path){h^=(unsigned short)*path++;h*=1099511628211ULL;}return h;}
-static int seenRollout(const WCHAR *path){ULONGLONG hash=rolloutHash(path);int i;for(i=0;i<seenRolloutCount;i++)if(seenRollouts[i]==hash)return 1;return 0;}
-static void rememberRollout(const WCHAR *path){if(!path[0])return;seenRollouts[seenRolloutNext]=rolloutHash(path);seenRolloutNext=(seenRolloutNext+1)%SEEN_ROLLOUTS;if(seenRolloutCount<SEEN_ROLLOUTS)seenRolloutCount++;}
+static ULONGLONG identityHash(const char *id){ULONGLONG h=14695981039346656037ULL;while(*id){h^=(unsigned char)*id++;h*=1099511628211ULL;}return h;}
+static SeenRollout *cachedRollout(const WCHAR *path){ULONGLONG hash=rolloutHash(path);int i;for(i=0;i<seenRolloutCount;i++)if(seenRollouts[i].hash==hash)return &seenRollouts[i];return NULL;}
+static int unreadHash(ULONGLONG hash){int i;if(!readStateOk)return 0;for(i=0;i<unreadCount;i++)if(identityHash(unreadIds[i])==hash)return 1;return 0;}
+static int seenRollout(const WCHAR *path){SeenRollout *r=cachedRollout(path);WIN32_FILE_ATTRIBUTE_DATA attr;if(!r)return 0;if(!r->dormant)return 1;
+    if(unreadHash(r->idHash)||!GetFileAttributesExW(path,GetFileExInfoStandard,&attr))return 0;
+    return CompareFileTime(&r->stamp,&attr.ftLastWriteTime)==0&&r->size==(((LONGLONG)attr.nFileSizeHigh<<32)|attr.nFileSizeLow);
+}
+static SeenRollout *rolloutCacheEntry(const WCHAR *path){SeenRollout *r=cachedRollout(path);if(!r){r=&seenRollouts[seenRolloutNext];seenRolloutNext=(seenRolloutNext+1)%SEEN_ROLLOUTS;if(seenRolloutCount<SEEN_ROLLOUTS)seenRolloutCount++;}memset(r,0,sizeof(*r));r->hash=rolloutHash(path);return r;}
+static void rememberRollout(const WCHAR *path){if(path[0])rolloutCacheEntry(path);}
+static void rememberDormant(const Chat *c){SeenRollout *r=rolloutCacheEntry(c->path);r->dormant=1;r->idHash=identityHash(c->id);r->size=c->fileSize;r->stamp=c->fileStamp;r->offset=c->offset;r->latestAt=c->latestAt;r->rolloutAt=c->rolloutAt;r->finished=c->finished;}
+static void pruneChats(void){int i,j,k;SIZE_T bytes;if(!readStateOk)return;
+    for(i=0;i<chatCount;){Chat *c=&chats[i];
+        if(activeChat(c)||isUnread(c->id)||c->quotaBlocked||c->unknown||c->mood==ERROR_STATE||c->mood==STOPPED||(c->ready&&nowSeconds()<completionPulseUntil)){i++;continue;}
+        if(c->path[0]&&c->fileKnown)rememberDormant(c);
+        for(j=k=0;j<panelCount;j++)if(panelRows[j]!=i)panelRows[k++]=panelRows[j]>i?panelRows[j]-1:panelRows[j];panelCount=k;
+        memmove(&chats[i],&chats[i+1],(chatCount-i-1)*sizeof(Chat));memset(&chats[--chatCount],0,sizeof(Chat));
+    }
+    if(chatCount<MAX_CHATS)overflow=0;bytes=chatPages(chatCount);if(bytes<chatCommitted&&VirtualFree((char*)chats+bytes,chatCommitted-bytes,MEM_DECOMMIT))chatCommitted=bytes;
+}
 static int rolloutSlot(const Chat *candidate){int i;if(!candidate->allowed||!candidate->id[0])return -1;
     for(i=0;i<chatCount;i++)if(!strcmp(chats[i].id,candidate->id))return candidate->rolloutAt>chats[i].rolloutAt||!chats[i].path[0]?i:-1;
     return chatCount<MAX_CHATS?chatCount:-2;
 }
-static void discoverRollout(const WCHAR *path){Chat candidate={0};int i,slot;
+static void discoverRollout(const WCHAR *path){Chat candidate={0};SeenRollout saved={0},*cached;int i,slot,incremental=0;
     for(i=0;i<chatCount;i++)if(!wcscmp(chats[i].path,path))return;
     if(seenRollout(path))return;wcscpy(candidate.path,path);
     /* Incomplete metadata is retried; only validated exclusions are cached. */
     if(!readChatMetadata(&candidate))return;
+    for(i=0;i<seenRolloutCount;i++)if(seenRollouts[i].dormant&&seenRollouts[i].idHash==identityHash(candidate.id)&&seenRollouts[i].rolloutAt>candidate.rolloutAt){rememberRollout(path);return;}
+    cached=cachedRollout(path);if(cached&&cached->dormant){saved=*cached;candidate.offset=saved.offset;candidate.finished=saved.finished;candidate.latestAt=saved.latestAt;incremental=1;}
     slot=rolloutSlot(&candidate);if(slot==-1){rememberRollout(path);return;}if(slot==-2){overflow=1;return;}
-    if(!readChat(&candidate,1))return;
+    if(!readChat(&candidate,!incremental))return;
     if(slot<chatCount){
         if(!candidate.latestAt)return;
         wcscpy(candidate.title,chats[slot].title);rememberRollout(chats[slot].path);
-    }else chatCount++;
+    }else {if(!ensureChatCapacity(chatCount+1)){failure=ERROR_NOT_ENOUGH_MEMORY;return;}chatCount++;}
     chats[slot]=candidate;
+    pruneChats();
 }
 static void discover(void) {
     FILETIME ft; ULARGE_INTEGER time; int day;
@@ -383,7 +419,7 @@ static void showPet(void) {
     for(m=0;m<7;m++) for(f=0;f<2;f++) icons[m][f]=makeIcon(m,f);
     for(m=0;m<2;m++)for(f=0;f<4;f++)extraIcons[m][f]=makeMotionIcon(m,f);
     loadCustomFrames();
-    discover();syncUnread();discoverUnreadChats();loadQuotaState();updateMotion();mood=aggregate(chats,chatCount,overflow); refresh(1); SetTimer(window,ID_ANIM,customEnabled&&customCount>1?150:300,NULL);
+    syncUnread();discover();pollUpdatedThreads();discoverUnreadChats();loadQuotaState();pruneChats();updateMotion();mood=aggregate(chats,chatCount,overflow); refresh(1); SetTimer(window,ID_ANIM,customEnabled&&customCount>1?150:300,NULL);
 }
 static void scan(void) {
     DWORD next; int ok,i; if(WaitForSingleObject(stopEvent,0)==WAIT_OBJECT_0) {DestroyWindow(window);return;}
@@ -397,9 +433,9 @@ static void scan(void) {
     if(!desktopPid || suppressedPid==desktopPid) return;
     if(!iconsAdded) { if(!icons[0][0]) showPet(); else refresh(1); }
     if(!ensureChats()) return;
-    if(++scanTick%3==0) discover();
+    if(++scanTick%3==0){discover();pollUpdatedThreads();}
     for(i=0;i<chatCount;i++) if(chats[i].allowed && chats[i].path[0]) readChat(&chats[i],0);
-    syncUnread();discoverUnreadChats();syncQuotaReadState();pollQuotaLog();saveQuotaState();updateMotion();
+    syncUnread();discoverUnreadChats();syncQuotaReadState();pollQuotaLog();saveQuotaState();pruneChats();updateMotion();
     { int old=mood; mood=aggregate(chats,chatCount,overflow); if(mood!=old) refresh(0); }
     if(panel && IsWindowVisible(panel)) {updatePanelData();repaintPanel();}
     if(scanTick%15==0) report();

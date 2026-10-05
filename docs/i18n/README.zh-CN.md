@@ -46,7 +46,7 @@ GIF 和示例窗口均通过代码制作，没有使用 AI 图像生成或重新
 
 ## 安装
 
-1. 从 [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) 下载 `codex-tray-pet-v0.2.1-windows-x64.zip`。
+1. 从 [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) 下载 `codex-tray-pet-v0.2.2-windows-x64.zip`。
 2. 解压到长期保留的目录。以后移动目录时，需要重新注册启动路径。
 3. 运行 `Install.cmd`，为当前 Windows 用户注册登录计划任务并启动监视程序。
 4. 如果猫被隐藏，请从通知区域的 `^` 菜单移出。
@@ -113,6 +113,8 @@ GIF 和示例窗口均通过代码制作，没有使用 AI 图像生成或重新
 浏览器设置仅绑定 `127.0.0.1` 的临时端口，并检查访问密钥、Origin 和 Host。收到关闭请求、10 分钟没有 API 请求或 Codex 退出时关闭连接。
 
 检测依据包括 `task_started`、`task_complete`、结构化错误和提问工具调用。仅界面中可见的变化、普通文本问题或未记录的错误可能无法识别。Codex 内部文件格式变化也可能影响检测。程序不使用官方实时状态 API，最多追踪 256 个会话，发现范围约为最近七天。大文本和图片数据通过固定缓冲区处理，仅保留状态元数据。 排除的子代理日志不占用会话名额；同一会话恢复后，新日志替换原名额中的旧日志。请参阅[会话检测验证](../DETECTION-VALIDATION.md)。
+
+完成或中断后停止详细日志跟踪。已读结果从监视列表移除，未读结果和警告继续保留。文件变化时恢复跟踪，并释放不再使用的内存。Codex 原始日志保持不变。请参阅[跟踪信息清理](../TRACKING-CLEANUP.md)。
 
 发布版本在作者 Windows 环境中通过了八项自动检查。已下载公开 v0.1.1 ZIP 并实际安装到这台电脑，验证了卸载、自动启动注册、进程运行、Codex 检测、托盘注册和重复安装不产生额外进程。参见[安装验证结果](../INSTALLATION-VALIDATION.md)。其他电脑安装、真实 Codex Exit 后重启和 Windows 重新登录尚未验证。可执行文件没有代码签名。
 

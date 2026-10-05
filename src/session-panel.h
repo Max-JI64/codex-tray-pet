@@ -90,7 +90,9 @@ static int visibleChat(const Chat *c){return activeChat(c)||isUnread(c->id)||c->
 static void discoverSessionId(const char *id) {
         int i;Chat *c;char digits[13];WCHAR wideId[64],pattern[1100];ULARGE_INTEGER ft;FILETIME fileTime;SYSTEMTIME date;WIN32_FIND_DATAW found;HANDLE find;
         for(i=0;i<chatCount;i++)if(chats[i].allowed&&strcmp(chats[i].id,id)==0)break;if(i<chatCount)return;
+        if(discoverIndexedSession(id))return;
         if(chatCount==MAX_CHATS){overflow=1;return;}
+        if(!ensureChatCapacity(chatCount+1))return;
         c=&chats[chatCount++];memset(c,0,sizeof(*c));strncpy(c->id,id,63);c->allowed=1;c->mood=IDLE;
         /* UUIDv7 creation date locates older unread rollouts without a recursive disk scan. */
         if(strlen(id)<13)return;memcpy(digits,id,8);memcpy(digits+8,id+9,4);digits[12]=0;
