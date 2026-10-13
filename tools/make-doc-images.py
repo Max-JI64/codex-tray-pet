@@ -93,9 +93,9 @@ color_gallery.save(OUT / "badge-colors.png", optimize=True)
 
 panel_labels = ["Running: elapsed time", "Completed: unread dots",
                 "Question: elapsed time + ?", "Error: unread result dots",
-                "Usage limit: resume markers"]
+                "Usage limit: resume markers", "Approval: elapsed time + !"]
 panels = []
-for number in range(5):
+for number in range(6):
     image = Image.open(BUILD / f"panel-{number}.bmp").convert("RGB")
     # State comparisons show both rows without a mouse or hover highlight.
     assert image.getpixel((7, 31)) == (249, 249, 249), "Unhovered first row"

@@ -16,8 +16,9 @@ static int renderSessionExample(int example,int hovered){
     chats=sample;chatCount=panelCount=2;panelOffset=0;panelHover=hovered?0:-1;readStateOk=1;desktopStartedAt=0;
     for(i=0;i<2;i++){sample[i].allowed=1;sample[i].latestAt=nowSeconds();sample[i].startedAt=nowSeconds()-(i?724:83);panelRows[i]=i;}
     wcscpy(sample[0].title,L"Build documentation");wcscpy(sample[1].title,L"Review changes");
-    sample[0].mood=sample[1].mood=example==0?WORK:example==1?DONE:example==2?QUESTION:example==3?ERROR_STATE:STOPPED;
+    sample[0].mood=sample[1].mood=example==0||example==5?WORK:example==1?DONE:example==2?QUESTION:example==3?ERROR_STATE:STOPPED;
     if(example==4)sample[0].quotaBlocked=sample[1].quotaBlocked=1;
+    if(example==5)sample[0].approvalPending=sample[1].approvalPending=1;
     bounds.left=bounds.top=0;bounds.right=px(280);bounds.bottom=panelHeight();
     bi.bmiHeader.biSize=sizeof(BITMAPINFOHEADER);bi.bmiHeader.biWidth=bounds.right;bi.bmiHeader.biHeight=-bounds.bottom;bi.bmiHeader.biPlanes=1;bi.bmiHeader.biBitCount=32;
     dc=CreateCompatibleDC(NULL);bitmap=CreateDIBSection(dc,&bi,DIB_RGB_COLORS,(void**)&pixels,NULL,0);if(!dc||!bitmap)return 0;
@@ -53,7 +54,7 @@ int main(void){
         }
         DestroyIcon(icon);
     }
-    for(state=0;state<5;state++)failed+=!renderSessionExample(state,0);
+    for(state=0;state<6;state++)failed+=!renderSessionExample(state,0);
     failed+=!renderSessionExample(0,1);
     DeleteObject(panelFont);DeleteObject(headerFont);return failed?1:0;
 }

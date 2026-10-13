@@ -2,7 +2,7 @@
 
 > **Windows x64 専用です。Windows 版 Codex デスクトップアプリが必要です。macOS と Linux は非対応です。**
 
-[English](../../README.md) · [한국어](README.ko.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md)
+[English](../../README.md) ,  [한국어](README.ko.md) ,  [日本語](README.ja.md) ,  [简体中文](README.zh-CN.md) ,  [Español](README.es.md)
 
 Windows の通知領域で Codex デスクトップアプリの作業状態を知らせる、小さな猫のプログラムです。セッション一覧から、実行中の作業、質問、使用量制限による中断、未読の結果を確認できます。
 
@@ -34,6 +34,8 @@ C と Windows API で実装しています。常駐アプリに Python、Node.js
 
 ![実行中、完了、質問、エラー、使用量制限の例](../images/session-examples.png)
 
+承認待ちでも黄色の猫を表示します。該当セッションには黄色の丸の中に `!` を表示し、質問には従来の `?` を使います。許可または拒否すると承認待ち表示が消えます。[承認待ちの検出と検証](../APPROVAL-WAITING.md)を参照してください。
+
 セッションにマウスを合わせると行が薄い灰色に変わり、ポインターが手の形になります。タイトルをクリックすると `codex://threads/<session ID>` リンクで **Codex デスクトップアプリの該当セッションへ移動**します。リンクはクリック時だけ開きます。
 
 ![ホバーした行の強調色と手形カーソル](../images/session-hover.png)
@@ -46,7 +48,7 @@ GIF と例のウィンドウはコードで作成しました。AI 画像生成�
 
 ## インストール
 
-1. [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) から `codex-tray-pet-v0.2.2-windows-x64.zip` をダウンロードします。
+1. [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) から `codex-tray-pet-v0.2.3-windows-x64.zip` をダウンロードします。
 2. 今後も使用するフォルダーに展開します。移動した場合は自動起動のパスを再登録してください。
 3. `Install.cmd` を実行します。現在の Windows ユーザーのログイン時タスクを登録し、監視を開始します。
 4. 猫が見えない場合は、通知領域の `^` メニューから表示させます。

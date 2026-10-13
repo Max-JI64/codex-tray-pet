@@ -8,45 +8,46 @@ static const WCHAR *languageNames[]={L"English",L"한국어",L"日本語",L"简�
 #define TXT_error 4
 #define TXT_stopped 5
 #define TXT_unknown 6
-#define TXT_app 7
-#define TXT_quota 8
-#define TXT_previewSuffix 9
-#define TXT_longSuffix 10
-#define TXT_tooltip 11
-#define TXT_status 12
-#define TXT_auto 13
-#define TXT_ack 14
-#define TXT_preview 15
-#define TXT_quotaPreview 16
-#define TXT_longPreview 17
-#define TXT_unreadPreview 18
-#define TXT_ackQuota 19
-#define TXT_badgeMenu 20
-#define TXT_animate 21
-#define TXT_changeIcon 22
-#define TXT_browserSettings 23
-#define TXT_hide 24
-#define TXT_exit 25
-#define TXT_charcoal 26
-#define TXT_red 27
-#define TXT_blue 28
-#define TXT_green 29
-#define TXT_purple 30
-#define TXT_white 31
-#define TXT_language 32
-#define TXT_saveFailed 33
-#define TXT_sessions 34
-#define TXT_settings 35
-#define TXT_noSessions 36
-#define TXT_loadingTitle 37
-#define TXT_readFailed 38
-#define TXT_scroll 39
-#define TXT_sessionWindow 40
-#define TXT_projectWindow 41
-#define TXT_launchLinkFailed 42
-#define TXT_openLinkFailed 43
-#define TXT_browserFailed 44
-#define TXT_launchBrowserFailed 45
+#define TXT_approvalWait 7
+#define TXT_app 8
+#define TXT_quota 9
+#define TXT_previewSuffix 10
+#define TXT_longSuffix 11
+#define TXT_tooltip 12
+#define TXT_status 13
+#define TXT_auto 14
+#define TXT_ack 15
+#define TXT_preview 16
+#define TXT_quotaPreview 17
+#define TXT_longPreview 18
+#define TXT_unreadPreview 19
+#define TXT_ackQuota 20
+#define TXT_badgeMenu 21
+#define TXT_animate 22
+#define TXT_changeIcon 23
+#define TXT_browserSettings 24
+#define TXT_hide 25
+#define TXT_exit 26
+#define TXT_charcoal 27
+#define TXT_red 28
+#define TXT_blue 29
+#define TXT_green 30
+#define TXT_purple 31
+#define TXT_white 32
+#define TXT_language 33
+#define TXT_saveFailed 34
+#define TXT_sessions 35
+#define TXT_settings 36
+#define TXT_noSessions 37
+#define TXT_loadingTitle 38
+#define TXT_readFailed 39
+#define TXT_scroll 40
+#define TXT_sessionWindow 41
+#define TXT_projectWindow 42
+#define TXT_launchLinkFailed 43
+#define TXT_openLinkFailed 44
+#define TXT_browserFailed 45
+#define TXT_launchBrowserFailed 46
 static const WCHAR *uiText[][5]={
 {L"Idle",L"대기중",L"待機中",L"空闲",L"En espera"},
 {L"Working",L"작업중",L"作業中",L"工作中",L"Trabajando"},
@@ -55,6 +56,7 @@ static const WCHAR *uiText[][5]={
 {L"Error",L"오류",L"エラー",L"错误",L"Error"},
 {L"Stopped",L"중지",L"停止",L"已停止",L"Detenido"},
 {L"Detection uncertain",L"감지확인 필요",L"検出の確認が必要",L"检测待确认",L"Detección incierta"},
+{L"Waiting for approval",L"작업 허용 대기",L"承認待ち",L"等待批准",L"Esperando aprobación"},
 {L"Codex Tray Pet",L"Codex 펫",L"Codex トレイペット",L"Codex 托盘宠物",L"Codex Tray Pet"},
 {L"Usage limit reached",L"사용량 제한으로 중지",L"使用量制限で停止",L"已达用量限制",L"Límite de uso alcanzado"},
 {L" · Preview",L" · 미리보기",L" · プレビュー",L" · 预览",L" · Vista previa"},

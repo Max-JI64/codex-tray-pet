@@ -79,8 +79,8 @@ static void syncUnread(void) {
     VirtualFree(state,0,MEM_RELEASE);if(readStateOk){unreadStateStamp=stateAttr.ftLastWriteTime;unreadAuthStamp=authAttr.ftLastWriteTime;}
 }
 static int isUnread(const char *id){int i;if(!readStateOk)return 0;for(i=0;i<unreadCount;i++)if(strcmp(unreadIds[i],id)==0)return 1;return 0;}
-static int activeChat(const Chat *c){return (c->mood==WORK||c->mood==QUESTION)&&(!desktopStartedAt||c->latestAt>=desktopStartedAt);}
-static int askingChat(const Chat *c){return activeChat(c)&&c->mood==QUESTION;}
+static int activeChat(const Chat *c){return (c->mood==WORK||c->mood==QUESTION||c->approvalPending||c->liveUserInput)&&(!desktopStartedAt||c->latestAt>=desktopStartedAt);}
+static int askingChat(const Chat *c){return activeChat(c)&&(c->mood==QUESTION||c->approvalPending||c->liveUserInput);}
 static int latestChat(int i){int j;if(!chats[i].allowed||!chats[i].id[0])return 0;for(j=0;j<chatCount;j++)if(j!=i&&chats[j].allowed&&strcmp(chats[i].id,chats[j].id)==0&&(chats[j].latestAt>chats[i].latestAt||(chats[j].latestAt==chats[i].latestAt&&j>i)))return 0;return 1;}
 static HWND projectTip;
 static WCHAR hoveredProject[512];
@@ -236,7 +236,7 @@ static void drawPanel(HDC dc,RECT bounds) {
         }else if(activeChat(c)){int asking=askingChat(c);elapsedText(c->startedAt,nowSeconds(),elapsed);r.left=px(194);r.right=px(asking?246:268);SetTextColor(dc,GetSysColor(COLOR_GRAYTEXT));DrawTextW(dc,elapsed,-1,&r,DT_SINGLELINE|DT_VCENTER|DT_RIGHT);
             if(asking){int side=px(13),left=px(252),top=y+(px(panelRowHeight)-side)/2;HPEN question=CreatePen(PS_SOLID,px(1),RGB(165,108,0));HGDIOBJ priorPen=SelectObject(dc,question),priorBrush=SelectObject(dc,GetStockObject(NULL_BRUSH));
                 Ellipse(dc,left,top,left+side,top+side);SelectObject(dc,priorBrush);SelectObject(dc,priorPen);DeleteObject(question);
-                r.left=left;r.right=left+side;r.top=top;r.bottom=top+side;SetTextColor(dc,RGB(165,108,0));SetBkMode(dc,TRANSPARENT);DrawTextW(dc,L"?",-1,&r,DT_SINGLELINE|DT_CENTER|DT_VCENTER|DT_NOPREFIX);SetBkMode(dc,OPAQUE);}
+                r.left=left;r.right=left+side;r.top=top;r.bottom=top+side;SetTextColor(dc,RGB(165,108,0));SetBkMode(dc,TRANSPARENT);DrawTextW(dc,c->approvalPending?L"!":L"?",-1,&r,DT_SINGLELINE|DT_CENTER|DT_VCENTER|DT_NOPREFIX);SetBkMode(dc,OPAQUE);}
         }
         else {int dotY=y+(px(panelRowHeight)-px(8))/2;HBRUSH dot=CreateSolidBrush(RGB(52,132,255));HGDIOBJ oldBrush=SelectObject(dc,dot),dotPen=SelectObject(dc,GetStockObject(NULL_PEN));Ellipse(dc,px(257),dotY,px(265),dotY+px(8));SelectObject(dc,dotPen);SelectObject(dc,oldBrush);DeleteObject(dot);}
     }

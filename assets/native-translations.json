@@ -48,6 +48,13 @@
     "检测待确认",
     "Detección incierta"
   ],
+  "approvalWait": [
+    "Waiting for approval",
+    "작업 허용 대기",
+    "承認待ち",
+    "等待批准",
+    "Esperando aprobación"
+  ],
   "app": [
     "Codex Tray Pet",
     "Codex 펫",

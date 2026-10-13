@@ -149,7 +149,7 @@ static HICON badgeIcon(HICON base,int count,int bright){return coloredBadgeIcon(
 #include "custom-icon.h"
 static void updateMotion(void) {
     int i,quota=0;LONGLONG now=nowSeconds();finishedUnread=longWorkCount=0;
-    for(i=0;i<chatCount;i++)if(latestChat(i)){Chat *c=&chats[i];if(c->quotaBlocked&&c->quotaAt>quotaAckAt)quota=1;if(c->finished&&!activeChat(c)&&isUnread(c->id))finishedUnread++;if(c->mood==WORK&&activeChat(c)&&c->startedAt>0&&now-c->startedAt>=600)longWorkCount++;}
+    for(i=0;i<chatCount;i++)if(latestChat(i)){Chat *c=&chats[i];if(c->quotaBlocked&&c->quotaAt>quotaAckAt)quota=1;if(c->finished&&!activeChat(c)&&isUnread(c->id))finishedUnread++;if(c->mood==WORK&&activeChat(c)&&!askingChat(c)&&c->startedAt>0&&now-c->startedAt>=600)longWorkCount++;}
     motion=manualMotion>=0?manualMotion:manual>=0?0:quota?1:longWorkCount&&aggregate(chats,chatCount,overflow)==WORK?2:0;
 }
 static HICON displayIcon(int shown) {

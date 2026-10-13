@@ -2,7 +2,7 @@
 
 > **Solo Windows x64. Requiere la aplicación de escritorio Codex para Windows. No es compatible con macOS ni Linux.**
 
-[English](../../README.md) · [한국어](README.ko.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md)
+[English](../../README.md) ,  [한국어](README.ko.md) ,  [日本語](README.ja.md) ,  [简体中文](README.zh-CN.md) ,  [Español](README.es.md)
 
 Un pequeño gato animado en el área de notificaciones de Windows que muestra el estado de tus tareas en Codex. Su lista de sesiones permite ver tareas en curso, preguntas, interrupciones por límites de uso y resultados sin leer.
 
@@ -34,6 +34,8 @@ Ejemplos de ventanas creados con el mismo código de Windows y títulos ficticio
 
 ![Ejemplos de sesiones](../images/session-examples.png)
 
+Las solicitudes de aprobación también muestran el gato amarillo. La sesión afectada usa un `!` dentro de un círculo amarillo; las preguntas conservan `?`. Al permitir o rechazar la solicitud, desaparece el indicador. Consulta la [detección y validación de aprobaciones](../APPROVAL-WAITING.md).
+
 Las tareas en curso muestran el tiempo transcurrido; los resultados completados sin leer, un punto azul; las preguntas, un `?` rodeado por un círculo; y los límites de uso, una `i` roja. Los errores normales sin leer también usan un punto azul en la lista; el gato de la bandeja pasa a rojo.
 
 Al pasar el ratón sobre una sesión, la fila se vuelve gris claro y el cursor toma forma de mano. Haz clic en el título para abrir esa sesión en Codex mediante `codex://threads/<ID de sesión>`. El enlace solo se abre al hacer clic.
@@ -44,7 +46,7 @@ Estos ejemplos muestran el idioma inglés predeterminado. No se generaron con IA
 
 ## Instalación
 
-1. Descarga `codex-tray-pet-v0.2.2-windows-x64.zip` desde [Releases](https://github.com/Max-JI64/codex-tray-pet/releases).
+1. Descarga `codex-tray-pet-v0.2.3-windows-x64.zip` desde [Releases](https://github.com/Max-JI64/codex-tray-pet/releases).
 2. Extrae el ZIP en una carpeta que vayas a conservar. Si la mueves, registra de nuevo la ruta de inicio.
 3. Ejecuta `Install.cmd`: registra una tarea al iniciar sesión con tu usuario y arranca el monitor.
 4. Si el gato está oculto, muévelo fuera del menú `^` del área de notificaciones.

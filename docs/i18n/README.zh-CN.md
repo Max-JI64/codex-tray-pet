@@ -2,7 +2,7 @@
 
 > **仅支持 Windows x64，需要 Windows 版 Codex 桌面应用。不支持 macOS 和 Linux。**
 
-[English](../../README.md) · [한국어](README.ko.md) · [日本語](README.ja.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md)
+[English](../../README.md) ,  [한국어](README.ko.md) ,  [日本語](README.ja.md) ,  [简体中文](README.zh-CN.md) ,  [Español](README.es.md)
 
 这是一个在 Windows 通知区域显示 Codex 桌面应用任务状态的小猫程序。打开会话列表即可查看正在运行的任务、问题、用量限制导致的中断和未读结果。
 
@@ -34,6 +34,8 @@
 
 ![运行、完成、问题、错误和用量限制的会话示例](../images/session-examples.png)
 
+等待用户批准时也显示黄色小猫。对应会话使用黄色圆圈中的 `!`，提问仍使用 `?`。批准或拒绝后，等待批准标记消失。请参阅[批准等待检测和验证](../APPROVAL-WAITING.md)。
+
 将鼠标悬停在会话上时，该行变为浅灰色，指针变为手形。点击标题通过 `codex://threads/<session ID>` 链接跳转到 **Codex 桌面应用中相应的会话**。链接只在点击时打开。
 
 ![悬停行的高亮颜色和手形光标](../images/session-hover.png)
@@ -46,7 +48,7 @@ GIF 和示例窗口均通过代码制作，没有使用 AI 图像生成或重新
 
 ## 安装
 
-1. 从 [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) 下载 `codex-tray-pet-v0.2.2-windows-x64.zip`。
+1. 从 [Releases](https://github.com/Max-JI64/codex-tray-pet/releases) 下载 `codex-tray-pet-v0.2.3-windows-x64.zip`。
 2. 解压到长期保留的目录。以后移动目录时，需要重新注册启动路径。
 3. 运行 `Install.cmd`，为当前 Windows 用户注册登录计划任务并启动监视程序。
 4. 如果猫被隐藏，请从通知区域的 `^` 菜单移出。

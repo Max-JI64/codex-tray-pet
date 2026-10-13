@@ -1,0 +1,32 @@
+static void approvalFixture(const char *json){DWORD size=(DWORD)strlen(json),i;approvalFeed((BYTE*)&size,2);approvalFeed((BYTE*)&size+2,2);for(i=0;i<size;i+=7)approvalFeed((const BYTE*)json+i,size-i>7?7:size-i);}
+static int approvalTest(void){FILE *f;WCHAR path[1100];Chat sample[2]={{0}},*saved=chats;int savedCount=chatCount,failed=0,i;DWORD size;char data[512];
+    _snwprintf(path,1100,L"%ls\\approval-verification.txt",folder);f=_wfopen(path,L"wb");if(!f)return 1;
+    approvalReader=VirtualAlloc(NULL,sizeof(StreamRecord),MEM_RESERVE|MEM_COMMIT,PAGE_READWRITE);if(!approvalReader){fclose(f);return 1;}
+    chats=sample;chatCount=2;for(i=0;i<2;i++){sample[i].allowed=1;sample[i].mood=WORK;sample[i].latestAt=nowSeconds();sample[i].ipcSubscribed=1;}strcpy(sample[0].id,"one");strcpy(sample[1].id,"two");
+    approvalFixture("{\"type\":\"response\",\"method\":\"initialize\",\"resultType\":\"success\",\"result\":{\"clientId\":\"pet-test\"}}");
+    failed+=check(approvalProtocolOk&&!strcmp(approvalClient,"pet-test"),"fragmented native IPC initialization frame",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"local\",\"conversationId\":\"one\",\"change\":{\"type\":\"snapshot\",\"revision\":1,\"conversationState\":{\"requests\":[],\"threadRuntimeStatus\":{\"type\":\"active\",\"activeFlags\":[\"waitingOnApproval\"]}}}}}");
+    failed+=check(sample[0].approvalPending&&askingChat(&sample[0])&&aggregate(sample,2,0)==QUESTION&&!sample[1].approvalPending,"actual approval flag makes cat yellow and identifies only its session",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"local\",\"conversationId\":\"one\",\"change\":{\"type\":\"patches\",\"baseRevision\":1,\"revision\":2,\"patches\":[{\"op\":\"replace\",\"path\":[\"threadRuntimeStatus\",\"activeFlags\"],\"value\":[]}]}}}");
+    failed+=check(!sample[0].approvalPending&&sample[0].mood==WORK&&aggregate(sample,2,0)==WORK,"approval resolution returns to working without overwriting log state",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"local\",\"conversationId\":\"one\",\"change\":{\"type\":\"snapshot\",\"revision\":3,\"conversationState\":{\"requests\":[{\"method\":\"item/commandExecution/requestApproval\"}],\"threadRuntimeStatus\":{\"type\":\"active\",\"activeFlags\":[]}}}}}");
+    failed+=check(sample[0].approvalPending,"pending command approval request is detected even without a runtime flag",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"local\",\"conversationId\":\"one\",\"change\":{\"type\":\"patches\",\"baseRevision\":3,\"revision\":4,\"patches\":[{\"op\":\"replace\",\"path\":[\"requests\"],\"value\":[]}]}}}");
+    failed+=check(!sample[0].approvalPending,"allow or reject clears the pending request indicator",f);
+    failed+=check(permissionMethod("item/fileChange/requestApproval")&&permissionMethod("item/permissions/requestApproval")&&!permissionMethod("item/autoApprovalReview/started"),"file and permission approvals supported; automatic review is not user waiting",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"local\",\"conversationId\":\"one\",\"change\":{\"type\":\"snapshot\",\"revision\":5,\"conversationState\":{\"threadRuntimeStatus\":{\"type\":\"active\",\"activeFlags\":[\"waitingOnUserInput\"]}}}}}");
+    failed+=check(!sample[0].approvalPending&&sample[0].liveUserInput&&askingChat(&sample[0]),"question waiting remains distinct from approval waiting",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"durable\",\"conversationId\":\"two\",\"change\":{\"type\":\"snapshot\",\"revision\":1,\"conversationState\":{\"threadRuntimeStatus\":{\"type\":\"active\",\"activeFlags\":[\"waitingOnApproval\"]}}}}}");
+    failed+=check(!sample[1].approvalPending,"remote host states cannot change local sessions",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":12,\"params\":{\"hostId\":\"local\",\"conversationId\":\"two\",\"change\":{\"type\":\"snapshot\",\"revision\":1,\"conversationState\":{\"threadRuntimeStatus\":{\"type\":\"active\",\"activeFlags\":[\"waitingOnApproval\"]}}}}}");
+    failed+=check(!sample[1].approvalPending,"unsupported protocol revisions are not guessed",f);
+    approvalFixture("{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"local\",\"conversationId\":\"two\",\"change\":{\"type\":\"patches\",\"baseRevision\":90,\"revision\":91,\"patches\":[{\"op\":\"replace\",\"path\":[\"threadRuntimeStatus\"],\"value\":{\"type\":\"active\",\"activeFlags\":[\"waitingOnApproval\"]}}]}}}");
+    failed+=check(!sample[1].ipcSubscribed&&!sample[1].approvalPending,"revision gaps trigger a fresh snapshot rather than applying stale patches",f);
+    /* Stream a large quoted conversation string without allocating its contents. */
+    {const char *prefix="{\"type\":\"broadcast\",\"method\":\"thread-stream-state-changed\",\"version\":11,\"params\":{\"hostId\":\"local\",\"conversationId\":\"one\",\"change\":{\"type\":\"snapshot\",\"revision\":6,\"conversationState\":{\"turns\":[{\"text\":\"";
+    const char *suffix="waitingOnApproval\"}],\"requests\":[],\"threadRuntimeStatus\":{\"type\":\"active\",\"activeFlags\":[]}}}}}";
+    size=(DWORD)(strlen(prefix)+1024*1024+strlen(suffix));approvalFeed((BYTE*)&size,4);approvalFeed((BYTE*)prefix,(DWORD)strlen(prefix));memset(data,'x',sizeof(data));for(i=0;i<2048;i++)approvalFeed((BYTE*)data,sizeof(data));approvalFeed((BYTE*)suffix,(DWORD)strlen(suffix));}
+    failed+=check(!sample[0].approvalPending&&!sample[0].liveUserInput&&sample[0].ipcRevision==6&&sizeof(StreamRecord)<32768,"large histories stream through bounded memory; quoted approval text cannot trigger waiting",f);
+    sample[0].approvalPending=1;approvalStop();failed+=check(!sample[0].approvalPending&&!sample[0].liveUserInput&&!sample[0].ipcSubscribed&&!approvalReader,"disconnect clears live overlay and releases the IPC reader",f);
+    chats=saved;chatCount=savedCount;fclose(f);return failed?1:0;
+}

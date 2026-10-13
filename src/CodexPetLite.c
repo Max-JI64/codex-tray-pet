@@ -39,6 +39,7 @@ typedef struct {
     char turn[128], questionId[128]; int asyncQuestion;
     char id[64]; WCHAR title[256]; LONGLONG startedAt,latestAt,quotaAt,rolloutAt; int finished,quotaBlocked,quotaUnread;
     FILETIME fileStamp;LONGLONG fileSize;int fileKnown,paused;
+    int approvalPending,liveUserInput,ipcSubscribed,ipcFlagApproval,ipcRequestApproval;LONGLONG ipcRevision;
 } Chat;
 typedef struct {
     char type[48],ev[48],turn[128],name[128],id[128],role[32],origin[80],parent[128];
@@ -105,6 +106,7 @@ static int sessionUrl(const char *id,WCHAR out[96]);
 static void syncUnread(void);
 static int isUnread(const char *id);
 static int activeChat(const Chat *c);
+static int askingChat(const Chat *c);
 static int latestChat(int i);
 static void updateMotion(void);
 static void pollQuotaLog(void);
@@ -120,6 +122,12 @@ static void applyCommand(int choice);
 static void detectionSnapshot(void);
 static void pollUpdatedThreads(void);
 static void pruneChats(void);
+static void approvalPoll(void);
+static void approvalStop(void);
+static void approvalForget(const Chat *c);
+static int approvalConnected(void);
+static unsigned long approvalFrameCount(void);
+static const WCHAR *displayStateName(int shown){int i;if(manual<0&&shown==QUESTION)for(i=0;i<chatCount;i++)if(chats[i].approvalPending)return tr(TXT_approvalWait);return stateName(shown);}
 static LONGLONG nowSeconds(void) { FILETIME ft; ULARGE_INTEGER n;GetSystemTimeAsFileTime(&ft);n.LowPart=ft.dwLowDateTime;n.HighPart=ft.dwHighDateTime;return (n.QuadPart-116444736000000000LL)/10000000; }
 static LONGLONG isoSeconds(const char *text) { SYSTEMTIME s={0};FILETIME ft;ULARGE_INTEGER n;unsigned y,mo,d,h,mi,se;if(sscanf(text,"%u-%u-%uT%u:%u:%u",&y,&mo,&d,&h,&mi,&se)!=6)return 0;s.wYear=y;s.wMonth=mo;s.wDay=d;s.wHour=h;s.wMinute=mi;s.wSecond=se;if(!SystemTimeToFileTime(&s,&ft))return 0;n.LowPart=ft.dwLowDateTime;n.HighPart=ft.dwHighDateTime;return(n.QuadPart-116444736000000000LL)/10000000;}
 static LONGLONG isoMilliseconds(const char *text){LONGLONG seconds=isoSeconds(text);const char *p=strchr(text,'.');int n=0,i;if(!seconds)return 0;if(p){p++;for(i=0;i<3;i++)n=n*10+(*p>='0'&&*p<='9'?*p++-'0':0);}return seconds*1000+n;}
@@ -240,7 +248,7 @@ static int aggregate(Chat *list,int count,int capExceeded) {
     for(i=0;i<count;i++) if(list[i].allowed) {
         if(list==chats&&!latestChat(i))continue;
         if(desktopStartedAt&&(list[i].mood==WORK||list[i].mood==QUESTION)&&!activeChat(&list[i]))continue;
-        int m=list[i].mood; q|=m==QUESTION; e|=m==ERROR_STATE; w|=m==WORK; d|=list[i].ready; s|=m==STOPPED; u|=m==UNKNOWN || list[i].unknown;
+        int m=list[i].mood; q|=m==QUESTION||list[i].approvalPending||list[i].liveUserInput; e|=m==ERROR_STATE; w|=m==WORK; d|=list[i].ready; s|=m==STOPPED; u|=m==UNKNOWN || list[i].unknown;
         if(list==chats)d|=list[i].finished&&isUnread(list[i].id)&&!activeChat(&list[i]);
     }
     return q ? QUESTION : e ? ERROR_STATE : w ? WORK : u ? UNKNOWN : d ? DONE : s ? STOPPED : IDLE;
@@ -303,6 +311,7 @@ static void pruneChats(void){int i,j,k;SIZE_T bytes;if(!readStateOk)return;
     for(i=0;i<chatCount;){Chat *c=&chats[i];
         if(activeChat(c)||isUnread(c->id)||c->quotaBlocked||c->unknown||c->mood==ERROR_STATE||c->mood==STOPPED||(c->ready&&nowSeconds()<completionPulseUntil)){i++;continue;}
         if(c->path[0]&&c->fileKnown)rememberDormant(c);
+        approvalForget(c);
         for(j=k=0;j<panelCount;j++)if(panelRows[j]!=i)panelRows[k++]=panelRows[j]>i?panelRows[j]-1:panelRows[j];panelCount=k;
         memmove(&chats[i],&chats[i+1],(chatCount-i-1)*sizeof(Chat));memset(&chats[--chatCount],0,sizeof(Chat));
     }
@@ -404,11 +413,12 @@ static void report(void) {
 static void refresh(int add) {
     int shown=manual>=0?manual:mood;
     tray.uFlags=NIF_ICON|NIF_TIP|NIF_MESSAGE; tray.hIcon=displayIcon(shown);
-    _snwprintf(tray.szTip,128,tr(TXT_tooltip),motion==1?tr(TXT_quota):stateName(shown),manual>=0||manualMotion>=0?tr(TXT_previewSuffix):L"",finishedUnread,longWorkCount?tr(TXT_longSuffix):L"");
+    _snwprintf(tray.szTip,128,tr(TXT_tooltip),motion==1?tr(TXT_quota):displayStateName(shown),manual>=0||manualMotion>=0?tr(TXT_previewSuffix):L"",finishedUnread,longWorkCount?tr(TXT_longSuffix):L"");
     if(add) iconsAdded=Shell_NotifyIconW(NIM_ADD,&tray)!=0;
     else if(iconsAdded && !Shell_NotifyIconW(NIM_MODIFY,&tray)) iconsAdded=0;
 }
 static void hidePet(void) {
+    approvalStop();
     browserSettingsStop();
     if(panel) DestroyWindow(panel);
     KillTimer(window,ID_ANIM); if(iconsAdded) Shell_NotifyIconW(NIM_DELETE,&tray); iconsAdded=0;
@@ -435,7 +445,7 @@ static void scan(void) {
     if(!ensureChats()) return;
     if(++scanTick%3==0){discover();pollUpdatedThreads();}
     for(i=0;i<chatCount;i++) if(chats[i].allowed && chats[i].path[0]) readChat(&chats[i],0);
-    syncUnread();discoverUnreadChats();syncQuotaReadState();pollQuotaLog();saveQuotaState();pruneChats();updateMotion();
+    syncUnread();discoverUnreadChats();syncQuotaReadState();pollQuotaLog();saveQuotaState();approvalPoll();pruneChats();updateMotion();
     { int old=mood; mood=aggregate(chats,chatCount,overflow); if(mood!=old) refresh(0); }
     if(panel && IsWindowVisible(panel)) {updatePanelData();repaintPanel();}
     if(scanTick%15==0) report();
@@ -445,7 +455,7 @@ static void menu(void) {
     HMENU root=CreatePopupMenu(),preview=CreatePopupMenu(),colors=CreatePopupMenu(),languages=CreatePopupMenu(); POINT pt; int i,choice; WCHAR title[80];
     const int colorKeys[]={TXT_charcoal,TXT_red,TXT_blue,TXT_green,TXT_purple,TXT_white};
     for(i=0;i<5;i++)AppendMenuW(languages,MF_STRING|(i==uiLanguage?MF_CHECKED:0),100+i,languageNames[i]);AppendMenuW(root,MF_POPUP,(UINT_PTR)languages,tr(TXT_language));AppendMenuW(root,MF_SEPARATOR,0,NULL);
-    _snwprintf(title,80,tr(TXT_status),motion==1?tr(TXT_quota):stateName(manual>=0?manual:mood)); AppendMenuW(root,MF_STRING|MF_GRAYED,0,title);
+    _snwprintf(title,80,tr(TXT_status),motion==1?tr(TXT_quota):displayStateName(manual>=0?manual:mood)); AppendMenuW(root,MF_STRING|MF_GRAYED,0,title);
     AppendMenuW(root,MF_STRING,10,tr(TXT_auto)); AppendMenuW(root,MF_STRING,11,tr(TXT_ack));
     for(i=0;i<7;i++) AppendMenuW(preview,MF_STRING,30+i,stateName(i)); AppendMenuW(root,MF_POPUP,(UINT_PTR)preview,tr(TXT_preview));
     AppendMenuW(preview,MF_SEPARATOR,0,NULL);AppendMenuW(preview,MF_STRING,70,tr(TXT_quotaPreview));AppendMenuW(preview,MF_STRING,71,tr(TXT_longPreview));AppendMenuW(preview,MF_STRING,72,tr(TXT_unreadPreview));
@@ -474,6 +484,7 @@ static void applyCommand(int choice){int i;
     updateMotion();refresh(0); report(); PostMessageW(window,WM_NULL,0,0);if(panel)InvalidateRect(panel,NULL,FALSE);
 }
 #include "session-panel.h"
+#include "approval-monitor.h"
 #include "browser-settings.h"
 static LRESULT CALLBACK wndProc(HWND h,UINT msg,WPARAM w,LPARAM l) {
     if(msg==taskbarCreated && desktopPid && suppressedPid!=desktopPid) {iconsAdded=0;refresh(1);return 0;}
@@ -563,6 +574,7 @@ int WINAPI WinMain(HINSTANCE instance,HINSTANCE prev,LPSTR command,int show) {
     if(strstr(command,"--panel-test"))return panelTest();
     if(strstr(command,"--stream-test"))return streamTest();
     if(strstr(command,"--detection-test"))return detectionTest();
+    if(strstr(command,"--approval-test"))return approvalTest();
     if(strstr(command,"--diagnose")){HWND h=FindWindowW(L"CodexPetLiteWindow",L"Codex Pet Lite");if(h){PostMessageW(h,WM_APP+26,0,0);return 0;}return 1;}
     if(strstr(command,"--open-settings-url ")){char narrow[256]={0};WCHAR url[256];sscanf(strstr(command,"--open-settings-url ")+20,"\"%255[^\"]",narrow);if(strncmp(narrow,"http://127.0.0.1:",17)||strpbrk(narrow," \r\n\\"))return 2;MultiByteToWideChar(CP_UTF8,0,narrow,-1,url,256);return launchSettingsBrowser(url)?0:1;}
     if(strstr(command,"--navigate ")){char id[64]={0};WCHAR url[96];sscanf(strstr(command,"--navigate ")+11,"%63s",id);if(!sessionUrl(id,url))return 2;return (int)(INT_PTR)ShellExecuteW(NULL,L"open",url,NULL,NULL,SW_SHOWNORMAL);}
